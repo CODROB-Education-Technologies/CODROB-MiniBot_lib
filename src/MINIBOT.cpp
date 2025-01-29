@@ -12,19 +12,17 @@ void MINIBOT::begin()
 
 void MINIBOT::playIntro()
 {
-  minibot.serialStart(115200);
-  minibot.serialWrite("Hi from MiniBot!");
-  minibot.ledWrite(HIGH);
+  digitalWrite(BLUE_LED, HIGH);
   delay(100);
-  minibot.ledWrite(LOW);
+  digitalWrite(BLUE_LED, LOW);
   delay(100);
-  minibot.ledWrite(HIGH);
+  digitalWrite(BLUE_LED, HIGH);
   delay(100);
-  minibot.ledWrite(LOW);
+  digitalWrite(BLUE_LED, LOW);
   delay(100);
-  minibot.ledWrite(HIGH);
+  digitalWrite(BLUE_LED, HIGH);
   delay(100);
-  minibot.ledWrite(LOW);
+  digitalWrite(BLUE_LED, LOW);
   delay(100);
 }
 

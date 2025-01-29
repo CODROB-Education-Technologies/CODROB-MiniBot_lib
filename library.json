@@ -1,6 +1,6 @@
 {
   "name": "CODROB_MINIBOT",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Library for MINIBOT, an ESP8266-based programmable device. Visit www.codrob.com.tr for more information.",
   "keywords": [
     "robotics",
@@ -30,6 +30,7 @@
       "examples/*",
       "test/*",
       "README.md",
+      "keywords.txt",
       "LICENSE",
       "CHANGELOG.md"
     ]
