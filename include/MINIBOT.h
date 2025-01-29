@@ -94,7 +94,7 @@ public:
   /*********************************** OTHER PINS ***********************************
    */
   int digitalReadPin(int pin);
-  void digitalWritePin(int pin, int value);
+  void digitalWritePin(int pin, bool value);
 
 private:
   DHT *dhtSensor; // Pointer to DHT sensor object

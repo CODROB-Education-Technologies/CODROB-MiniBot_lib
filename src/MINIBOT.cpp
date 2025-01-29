@@ -12,14 +12,20 @@ void MINIBOT::begin()
 
 void MINIBOT::playIntro()
 {
-  /*
-  lcd.clear();
-  lcd.setCursor(3, 1);
-  lcd.print("--- MINIBOT ---");
-  lcd.setCursor(4, 3);
-  lcd.print("Powered by ESP8266");
-  delay(2000);
-  */
+  minibot.serialStart(115200);
+  minibot.serialWrite("Hi from MiniBot!");
+  minibot.ledWrite(HIGH);
+  delay(100);
+  minibot.ledWrite(LOW);
+  delay(100);
+  minibot.ledWrite(HIGH);
+  delay(100);
+  minibot.ledWrite(LOW);
+  delay(100);
+  minibot.ledWrite(HIGH);
+  delay(100);
+  minibot.ledWrite(LOW);
+  delay(100);
 }
 
 /*********************************** Serial Port ***********************************
@@ -154,6 +160,7 @@ int MINIBOT::moduleDthFeelingTemp(int pin) // Calculate Heat Index (Feeling Temp
  */
 bool MINIBOT::moduleMagneticRead(int pin)
 {
+  pinMode(pin, INPUT);
   return !digitalRead(pin);
 }
 
@@ -161,6 +168,7 @@ bool MINIBOT::moduleMagneticRead(int pin)
  */
 bool MINIBOT::moduleVibrationDigitalRead(int pin)
 {
+  pinMode(pin, INPUT);
   return digitalRead(pin);
 }
 
@@ -378,6 +386,7 @@ void MINIBOT::moduleSmartLEDColorWipeEffect(uint32_t color, int wait)
  */
 bool MINIBOT::moduleMotionRead(int pin)
 {
+  pinMode(pin, INPUT);
   return digitalRead(pin);
 }
 
@@ -415,10 +424,11 @@ void MINIBOT::moduleRelayWrite(int pin, bool status)
 
 int MINIBOT::digitalReadPin(int pin)
 {
+  pinMode(pin, INPUT);
   return digitalRead(pin);
 }
 
-void MINIBOT::digitalWritePin(int pin, int value)
+void MINIBOT::digitalWritePin(int pin, bool value)
 {
   pinMode(pin, OUTPUT);
   digitalWrite(pin, value);
