@@ -1,32 +1,29 @@
-#include <IOTBOT.h>
+#include <MINIBOT.h> // MINIBOT kütüphanesi / MINIBOT library
 
-IOTBOT iotbot;
+// Create a MINIBOT object / MINIBOT nesnesi oluşturuluyor
+MINIBOT minibot;
 
-#define SENSOR_PIN IO27 // Select sensor pin / Sensörün bağlı olduğu pini seçin.
-                        // IO25 - IO26 - IO27 - IO32 - IO33
-
+#define SENSOR_PIN IO12 // Select sensor pin / Sensörün bağlı olduğu pini seçin.
+                        // IO4 - IO5 - IO12 - IO13 - IO14
 void setup()
 {
-    iotbot.begin();
-    iotbot.serialStart(115200);
-    iotbot.lcdClear();
-    iotbot.lcdWriteMid("PIR Sensor", "--- IoTBot ---", "Test Basladi", "Test Started");
-    delay(3000);
+    minibot.begin();                                          // Initialize MINIBOT / MINIBOT başlatılıyor
+    minibot.playIntro();                                      // Play startup melody / Giriş müziği çalınıyor
+    minibot.serialStart(115200);                              // Start serial communication / Seri haberleşmeyi başlat
+    minibot.serialWrite("Welcome to MiniBot PIR Module Test Firmware!"); // Display welcome message / Hoşgeldiniz mesajını göster
 }
 
 void loop()
 {
-    int motionDetected = iotbot.moduleMotionRead(SENSOR_PIN); // PIR sensör verisi / PIR sensor value
-    iotbot.lcdClear();
+    int motionDetected = minibot.moduleMotionRead(SENSOR_PIN); // PIR sensör verisi / PIR sensor value
 
     if (motionDetected)
     {
-        iotbot.lcdWriteMid("Hareket Algılandi!", "Motion Detected!", "", "");
+        minibot.serialWrite("Hareket Algılandi! - Motion Detected!");
     }
     else
     {
-        iotbot.lcdWriteMid("Hareket Yok", "No Motion", "", "");
+        minibot.serialWrite("Hareket Yok! - No Motion!");
     }
-
     delay(500);
 }

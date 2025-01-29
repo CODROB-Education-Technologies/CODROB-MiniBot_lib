@@ -1,30 +1,27 @@
-#include <IOTBOT.h>
+#include <MINIBOT.h> // MINIBOT kütüphanesi / MINIBOT library
 
-IOTBOT iotbot;
+// Create a MINIBOT object / MINIBOT nesnesi oluşturuluyor
+MINIBOT minibot;
 
-#define SENSOR_PIN IO27 // Select sensor pin / Sensörün bağlı olduğu pini seçin.
-                        // IO25 - IO26 - IO27 - IO32 - IO33
-
+#define SENSOR_PIN IO12 // Select sensor pin / Sensörün bağlı olduğu pini seçin.
+                        // IO4 - IO5 - IO12 - IO13 - IO14
 void setup()
 {
-    iotbot.begin();
-    iotbot.serialStart(115200);
-    iotbot.lcdClear();
-    iotbot.lcdWriteMid("Role Modulu", "--- IoTBot ---", "Test Basladi", "Test Started");
-    delay(3000);
+    minibot.begin();                                                // Initialize MINIBOT / MINIBOT başlatılıyor
+    minibot.playIntro();                                            // Play startup melody / Giriş müziği çalınıyor
+    minibot.serialStart(115200);                                    // Start serial communication / Seri haberleşmeyi başlat
+    minibot.serialWrite("Welcome to MiniBot Relay Test Firmware!"); // Display welcome message / Hoşgeldiniz mesajını göster
 }
 
 void loop()
 {
     // Röleyi aktif hale getir / Activate the relay
-    iotbot.moduleRelayWrite(SENSOR_PIN, true);
-    iotbot.lcdClear();
-    iotbot.lcdWriteMid("Role Durumu:", "Relay Status:", "Açık / ON", "");
+    minibot.moduleRelayWrite(SENSOR_PIN, true);
+    minibot.serialWrite("Relay ON - Röle Devrede!");
     delay(3000);
 
     // Röleyi pasif hale getir / Deactivate the relay
-    iotbot.moduleRelayWrite(SENSOR_PIN, false);
-    iotbot.lcdClear();
-    iotbot.lcdWriteMid("Role Durumu:", "Relay Status:", "Kapalı / OFF", "");
+    minibot.moduleRelayWrite(SENSOR_PIN, false);
+    minibot.serialWrite("Relay OFF - Röle Devre Dışı!");
     delay(3000);
 }

@@ -1,40 +1,32 @@
-#include <MINIBOT.h>
+#include <MINIBOT.h> // MINIBOT kütüphanesi / MINIBOT library
 
-// MINIBOT nesnesi oluşturuluyor
+// Create a MINIBOT object / MINIBOT nesnesi oluşturuluyor
 MINIBOT minibot;
 
 void setup()
 {
-  minibot.begin();
-  minibot.playIntro();
+  minibot.begin();             // Initialize MINIBOT / MINIBOT başlatılıyor
+  minibot.playIntro();         // Play startup melody / Giriş müziği çalınıyor
+  minibot.serialStart(115200); // Start serial communication / Seri haberleşmeyi başlat
+
+  minibot.serialWrite("Welcome to MiniBot Test Firmware!"); // Display welcome message / Hoşgeldiniz mesajını göster
 }
 
 void loop()
 {
-  // LCD ekran mesajı
-  minibot.lcdWriteMid("MINIBOT Active!", "Press Buttons", "Enjoy the Show!", "");
-
-  // Butonların okunması
+  // Read button state / Buton durumunu oku
   if (minibot.button1Read() == LOW)
   {
-    minibot.lcdClear();
-    minibot.lcdWriteMid("Button 1", "Pressed!", "", "");
-    minibot.buzzerPlayTone(1000, 300);
-  }
+    minibot.serialWrite("Button Pressed!"); // Print button pressed message / Butona basıldığını yazdır
 
-  if (minibot.button2Read() == LOW)
+    minibot.ledWrite(HIGH); // Turn on LED / LED'i aç
+    delay(200);
+  }
+  else
   {
-    minibot.lcdClear();
-    minibot.lcdWriteMid("Button 2", "Pressed!", "", "");
-    minibot.buzzerPlayTone(800, 300);
+    minibot.serialWrite("Button Free"); // Print button released message / Butonun serbest olduğunu yazdır
+
+    minibot.ledWrite(LOW); // Turn off LED / LED'i kapat
+    delay(200);
   }
-
-  // Servo hareketi örneği
-  minibot.servoMove(D2, 90); // D2 pinindeki servo 90 dereceye döner
-
-  // Röle örneği
-  minibot.relayWrite(true);
-  delay(500);
-  minibot.relayWrite(false);
-  delay(500);
 }

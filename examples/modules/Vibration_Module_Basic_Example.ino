@@ -1,23 +1,26 @@
-#include <IOTBOT.h> // IoTBot kütüphanesi / IoTBot library
+#include <MINIBOT.h> // MINIBOT kütüphanesi / MINIBOT library
 
-IOTBOT iotbot; // IoTBot nesnesi oluşturuluyor / Create IoTBot object
+// Create a MINIBOT object / MINIBOT nesnesi oluşturuluyor
+MINIBOT minibot;
 
-#define SENSOR_PIN IO27 // Select sensor pin / Sensörün bağlı olduğu pini seçin.
-                        // IO25 - IO26 - IO27 - IO32 - IO33
-
+#define SENSOR_PIN IO12 // Select sensor pin / Sensörün bağlı olduğu pini seçin.
+                        // IO4 - IO5 - IO12 - IO13 - IO14
 void setup()
 {
-    iotbot.begin();             // IoTBot başlatılıyor / Initialize IoTBot
-    iotbot.serialStart(115200); // Seri iletişim başlatılıyor / Start serial communication
-    iotbot.serialWrite("Titreşim sensör testi başlatıldı / Vibration sensor test started.");
+    minibot.begin();                                                    // Initialize MINIBOT / MINIBOT başlatılıyor
+    minibot.playIntro();                                                // Play startup melody / Giriş müziği çalınıyor
+    minibot.serialStart(115200);                                        // Start serial communication / Seri haberleşmeyi başlat
+    minibot.serialWrite("Welcome to MiniBot Vibration Test Firmware!"); // Display welcome message / Hoşgeldiniz mesajını göster
 }
 
 void loop()
 {
-    int vibrationStatus = iotbot.moduleVibrationAnalogRead(SENSOR_PIN); // Titreşim durumu okunuyor / Read vibration status
-
-    iotbot.serialWrite("Titresim Durumu / Vibration Status: ");
-    iotbot.serialWrite(vibrationStatus); // Titreşim durumu yazdırılıyor / Print vibration status
+    bool vibrationStatus = minibot.moduleVibrationDigitalRead(SENSOR_PIN); // Titreşim durumu okunuyor / Read vibration status
+    if (vibrationStatus)
+    {
+        minibot.serialWrite("Titresim Durumu / Vibration Status: ");
+        minibot.serialWrite(vibrationStatus); // Titreşim durumu yazdırılıyor / Print vibration status
+    }
 
     delay(100); // 500 ms bekle / Wait for 500 ms
 }

@@ -1,29 +1,26 @@
-#include <IOTBOT.h> // IoTBot kütüphanesi / IoTBot library
+#include <MINIBOT.h> // MINIBOT kütüphanesi / MINIBOT library
 
-IOTBOT iotbot; // IoTBot nesnesi / Create IoTBot object
+// Create a MINIBOT object / MINIBOT nesnesi oluşturuluyor
+MINIBOT minibot;
 
-#define SENSOR_PIN IO27 // Select sensor pin / Sensörün bağlı olduğu pini seçin.
-                        // IO25 - IO26 - IO27 - IO32 - IO33
-
+#define SENSOR_PIN IO12 // Select sensor pin / Sensörün bağlı olduğu pini seçin.
+                        // IO4 - IO5 - IO12 - IO13 - IO14
 void setup()
 {
-    iotbot.begin();             // IoTBot başlatılıyor / Initialize IoTBot
-    iotbot.serialStart(115200); // Seri iletişim başlatılıyor / Start serial communication
-    iotbot.lcdWriteMid("--- IoTBot ---", "Servo Motor", "Test Basladi", "Test Started");
-    delay(3000); // Başlangıç ekranı / Startup screen
-    iotbot.lcdClear();
-    iotbot.lcdWriteCR(5, 1, "Angle / Aci");
+    minibot.begin();             // Initialize MINIBOT / MINIBOT başlatılıyor
+    minibot.playIntro();         // Play startup melody / Giriş müziği çalınıyor
+    minibot.serialStart(115200); // Start serial communication / Seri haberleşmeyi başlat
+
+    minibot.serialWrite("Welcome to MiniBot Servo Test Firmware!"); // Display welcome message / Hoşgeldiniz mesajını göster
 }
 
 void loop()
 {
-    iotbot.serialWrite("Angle / Aci: 0");
-    iotbot.lcdWriteCR(9, 2, " 0 ");
-    iotbot.moduleServoGoAngle(SENSOR_PIN, 0, 5); // Servo 27. pine bağlı / Servo connected to pin 27
+    minibot.serialWrite("Angle / Aci: 0");
+    minibot.moduleServoGoAngle(SENSOR_PIN, 0, 5); // Servo 27. pine bağlı / Servo connected to pin 27
     delay(1000);
 
-    iotbot.serialWrite("Angle / Aci: 180");
-    iotbot.lcdWriteCR(9, 2, "180");
-    iotbot.moduleServoGoAngle(SENSOR_PIN, 180, 10);
+    minibot.serialWrite("Angle / Aci: 180");
+    minibot.moduleServoGoAngle(SENSOR_PIN, 180, 10);
     delay(1000);
 }

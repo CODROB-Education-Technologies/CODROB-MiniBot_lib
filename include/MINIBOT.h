@@ -4,22 +4,19 @@
 #if defined(ESP8266)
 
 #include <Arduino.h>
-#include <LiquidCrystal_I2C.h>
-#include <IRremoteESP8266.h>
-#include <IRrecv.h>
-#include <IRutils.h>
 #include <Servo.h>
+#include <DHT.h>
+#include <Adafruit_NeoPixel.h>
 
-// Pin Tanımlamaları
-#define JOYSTICK_BUTTON_PIN D3
-#define ENCODER_A_PIN D5
-#define ENCODER_B_PIN D6
-#define ENCODER_BUTTON_PIN D4
-#define B1_BUTTON_PIN D7
-#define B2_BUTTON_PIN D8
-#define BUZZER_PIN D2
-#define RELAY_PIN D1
-#define LCD_ADRESS 0x27
+// PinS
+#define B1_BUTTON_PIN 0
+#define BLUE_LED 16
+
+#define IO4 4
+#define IO5 5
+#define IO12 12
+#define IO13 13
+#define IO14 14
 
 class MINIBOT
 {
@@ -28,35 +25,83 @@ public:
   void begin();
   void playIntro();
 
-  /*********************************** BUZZER ***********************************/
-  void buzzerPlayTone(int frequency, int duration);
-  void buzzerSoundIntro();
-
-  /*********************************** LCD ***********************************/
-  void lcdWriteMid(const char *line1, const char *line2, const char *line3, const char *line4);
-  void lcdWrite(const char *text);
-  void lcdClear();
+  /*********************************** Serial Port ***********************************
+   */
+  void serialStart(int baundrate);
+  void serialWrite(const char *message);
+  void serialWrite(int value);
+  void serialWrite(float value);
+  void serialWrite(bool value);
 
   /*********************************** BUTTONS ***********************************/
   int button1Read();
-  int button2Read();
-  int joystickButtonRead();
 
-  /*********************************** RELAY ***********************************/
-  void relayWrite(bool status);
+  /*********************************** LED ***********************************/
+  void ledWrite(bool status);
 
-  /*********************************** SERVO ***********************************/
-  void servoMove(int pin, int angle);
+  /*********************************** Servo Motor Sensor ***********************************
+   */
+  void moduleServoGoAngle(int pin, int angle, int acceleration);
 
-  /*********************************** ENCODER ***********************************/
-  int encoderRead();
-  int encoderButtonRead();
+  /*********************************** DHT Sensor ***********************************
+   */
+
+  int moduleDhtTempRead(int pin);
+  int moduleDhtHumRead(int pin);
+  int moduleDthFeelingTemp(int pin);
+
+  /*********************************** Magnetic Sensor ***********************************
+   */
+  int moduleMagneticRead(int pin);
+
+  /*********************************** Vibration Sensor ***********************************
+   */
+  int moduleVibrationDigitalRead(int pin);
+
+  /*********************************** Ultrasonic Distance Sensor ***********************************
+   */
+  int moduleUltrasonicDistanceRead();
+
+  /*********************************** Trafic Ligh Sensor ***********************************
+   */
+  void moduleTraficLightWrite(bool red, bool yellow, bool green);
+
+  /*********************************** Smart LED Sensor ***********************************
+   */
+  void extendSmartLEDPrepare(int pin, int numLEDs);
+  void extendSmartLEDFill(int startLED, int endLED, int red, int green, int blue);
+
+  void moduleSmartLEDPrepare(int pin);                             // Initialize NeoPixel strip
+  void moduleSmartLEDWrite(int led, int red, int green, int blue); // Write RGB values to specific LED
+  void moduleSmartLEDRainbowEffect(int wait);                      // Rainbow effect
+  void moduleSmartLEDRainbowTheaterChaseEffect(int wait);          // Rainbow theater chase effect
+  void moduleSmartLEDTheaterChaseEffect(uint32_t color, int wait); // Theater chase effect
+  void moduleSmartLEDColorWipeEffect(uint32_t color, int wait);    // Color wipe effect
+  uint32_t getColor(int red, int green, int blue);                 // Helper function for creating colors
+
+  /*********************************** Motion Sensor ***********************************
+   */
+  int moduleMotionRead(int pin);
+
+  /*********************************** IR Sensor ***********************************
+   */
+  int moduleIRRead(int pin);
+
+  /*********************************** Relay Sensor ***********************************
+   */
+  void moduleRelayWrite(int pin, bool status);
+
+  /*********************************** OTHER PINS ***********************************
+   */
+  int digitalReadPin(int pin);
+  void digitalWritePin(int pin, int value);
 
 private:
-  LiquidCrystal_I2C lcd;
-  Servo servoMotor;
-  int encoderCount;
-  int lastStateA;
+  DHT *dhtSensor; // Pointer to DHT sensor object
+  Servo servoModule;
+  int currentAngle = 0;
+  void initializeDht(int pin, uint8_t type);
+  Adafruit_NeoPixel *pixels; // NeoPixel object pointer
 };
 
 #else

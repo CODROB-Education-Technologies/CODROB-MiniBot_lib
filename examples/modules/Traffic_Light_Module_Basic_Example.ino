@@ -1,33 +1,32 @@
-#include <IOTBOT.h>
+#include <MINIBOT.h> // MINIBOT kütüphanesi / MINIBOT library
 
-IOTBOT iotbot;
+// Create a MINIBOT object / MINIBOT nesnesi oluşturuluyor
+MINIBOT minibot;
 
+#define SENSOR_PIN IO12 // Select sensor pin / Sensörün bağlı olduğu pini seçin.
+                        // IO4 - IO5 - IO12 - IO13 - IO14
 void setup()
 {
-    iotbot.begin();
-    iotbot.serialStart(115200);
-    iotbot.lcdClear();
-    iotbot.lcdWriteMid("Trafik Isigi", "--- IoTBot ---", "Test Basladi", "Test Started");
-    delay(3000);
+    minibot.begin();                                                // Initialize MINIBOT / MINIBOT başlatılıyor
+    minibot.playIntro();                                            // Play startup melody / Giriş müziği çalınıyor
+    minibot.serialStart(115200);                                    // Start serial communication / Seri haberleşmeyi başlat
+    minibot.serialWrite("Welcome to MiniBot Traffic Lights Test Firmware!"); // Display welcome message / Hoşgeldiniz mesajını göster
 }
 
 void loop()
 {
     // Kırmızı ışık / Red light
-    iotbot.moduleTraficLightWrite(true, false, false);
-    iotbot.lcdClear();
-    iotbot.lcdWriteMid("Kirmizi Isik", "Red Light", "", "");
+    minibot.moduleTraficLightWrite(true, false, false);
+    minibot.serialWrite("Kirmizi Isik - Red Light"); // Display welcome message / Hoşgeldiniz mesajını göster
     delay(3000);
 
     // Sarı ışık / Yellow light
-    iotbot.moduleTraficLightWrite(false, true, false);
-    iotbot.lcdClear();
-    iotbot.lcdWriteMid("Sari Isik", "Yellow Light", "", "");
+    minibot.moduleTraficLightWrite(false, true, false);
+    minibot.serialWrite("Sari Isik - Yellow Light"); // Display welcome message / Hoşgeldiniz mesajını göster
     delay(3000);
 
     // Yeşil ışık / Green light
-    iotbot.moduleTraficLightWrite(false, false, true);
-    iotbot.lcdClear();
-    iotbot.lcdWriteMid("Yesil Isik", "Green Light", "", "");
+    minibot.moduleTraficLightWrite(false, false, true);
+    minibot.serialWrite("Yesil Isik - Green Light"); // Display welcome message / Hoşgeldiniz mesajını göster
     delay(3000);
 }
