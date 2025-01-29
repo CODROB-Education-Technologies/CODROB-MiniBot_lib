@@ -5,10 +5,16 @@ MINIBOT minibot;
 
 #define SENSOR_PIN IO12 // Select sensor pin / Sensörün bağlı olduğu pini seçin.
                         // IO4 - IO5 - IO12 - IO13 - IO14
+
 void setup()
 {
-    // Initialize NeoPixel strip (Pin: GPIO 27, LED Count: 3)
-    // NeoPixel şeridini başlat (Pin: GPIO 27, LED Sayısı: 3)
+    minibot.begin();             // Initialize MINIBOT / MINIBOT başlatılıyor
+    minibot.playIntro();         // Play startup melody / Giriş müziği çalınıyor
+    minibot.serialStart(115200); // Start serial communication / Seri haberleşmeyi başlat
+    minibot.serialWrite("Smart LED testi başlatıldı / Smart LED test started.");
+
+    // Initialize NeoPixel strip (Pin: GPIO 12, LED Count: 3)
+    // NeoPixel şeridini başlat (Pin: GPIO 12, LED Sayısı: 3)
     minibot.moduleSmartLEDPrepare(SENSOR_PIN); //(I025, IO26,IO27,IO32,IO33)
 
     // Set initial LED colors / Başlangıç renklerini ayarla

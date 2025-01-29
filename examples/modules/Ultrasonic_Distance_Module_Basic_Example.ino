@@ -5,6 +5,7 @@ MINIBOT minibot;
 
 #define SENSOR_PIN IO12 // Select sensor pin / Sensörün bağlı olduğu pini seçin.
                         // IO4 - IO5 - IO12 - IO13 - IO14
+                        
 void setup()
 {
     minibot.begin();                                                              // Initialize MINIBOT / MINIBOT başlatılıyor

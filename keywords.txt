@@ -1,11 +1,11 @@
 #######################################
-# IoTBot Keywords
+# MINIBOT Keywords
 # Format:
 # <KEYWORD>    <TAB>    <TYPE>
 #######################################
 
 # Class
-IOTBOT	KEYWORD1
+MINIBOT	KEYWORD1
 
 # Functions
 begin	KEYWORD2
@@ -14,44 +14,7 @@ playIntro	KEYWORD2
 serialStart	KEYWORD2
 serialWrite	KEYWORD2
 
-buzzerPlayTone	KEYWORD2
-buzzerSoundIntro	KEYWORD2
-buzzertest	KEYWORD2
-
-lcdWriteMid	KEYWORD2
-lcdWriteCR	KEYWORD2
-lcdWrite	KEYWORD2
-lcdClear	KEYWORD2
-lcdtest	KEYWORD2
-
-ldrRead	KEYWORD2
-ldrtest	KEYWORD2
-
-relayWrite	KEYWORD2
-relaytest	KEYWORD2
-
-potentiometerRead	KEYWORD2
-potentiometertest	KEYWORD2
-
-joystickXRead	KEYWORD2
-joystickYRead	KEYWORD2
-joystickButtonRead	KEYWORD2
-joysticktest	KEYWORD2
-
 button1Read	KEYWORD2
-button2Read	KEYWORD2
-button3Read	KEYWORD2
-buttonsAnalogtest	KEYWORD2
-
-encoderRead	KEYWORD2
-encoderButtonRead	KEYWORD2
-encodertest	KEYWORD2
-
-moduleStepMotorMotion	KEYWORD2
-moduleDCMotorGOClockWise	KEYWORD2
-moduleDCMotorGOCounterClockWise	KEYWORD2
-moduleDCMotorStop	KEYWORD2
-moduleDCMotorBrake	KEYWORD2
 
 moduleServoGoAngle	KEYWORD2
 
@@ -59,12 +22,7 @@ moduleDhtTempRead	KEYWORD2
 moduleDhtHumRead	KEYWORD2
 moduleDthFeelingTemp	KEYWORD2
 
-moduleNtcTempRead	KEYWORD2
-
 moduleMagneticRead	KEYWORD2
-
-moduleMatrisButtonAnalogRead	KEYWORD2
-moduleMatrisButtonNumberRead	KEYWORD2
 
 moduleVibrationDigitalRead	KEYWORD2
 moduleVibrationAnalogRead	KEYWORD2
@@ -85,18 +43,10 @@ getColor	KEYWORD2
 
 moduleMotionRead	KEYWORD2
 
-moduleSmokeRead	KEYWORD2
-
-moduleMicRead	KEYWORD2
-
-moduleSoilMoistureRead	KEYWORD2
-
 moduleIRRead	KEYWORD2
 
 moduleRelayWrite	KEYWORD2
 
-analogReadPin	KEYWORD2
-analogWritePin	KEYWORD2
 digitalReadPin	KEYWORD2
 digitalWritePin	KEYWORD2
 

@@ -51,7 +51,7 @@ void MINIBOT::serialWrite(bool value)
 
 /*********************************** BUTTONS ***********************************
  */
-int MINIBOT::button1Read()
+bool MINIBOT::button1Read()
 {
   return digitalRead(B1_BUTTON_PIN);
 }
@@ -152,14 +152,14 @@ int MINIBOT::moduleDthFeelingTemp(int pin) // Calculate Heat Index (Feeling Temp
 
 /*********************************** Magnetic Sensor ***********************************
  */
-int MINIBOT::moduleMagneticRead(int pin)
+bool MINIBOT::moduleMagneticRead(int pin)
 {
   return !digitalRead(pin);
 }
 
 /*********************************** Vibration Sensor ***********************************
  */
-int MINIBOT::moduleVibrationDigitalRead(int pin)
+bool MINIBOT::moduleVibrationDigitalRead(int pin)
 {
   return digitalRead(pin);
 }
@@ -376,7 +376,7 @@ void MINIBOT::moduleSmartLEDColorWipeEffect(uint32_t color, int wait)
 
 /*********************************** Motion Sensor ***********************************
  */
-int MINIBOT::moduleMotionRead(int pin)
+bool MINIBOT::moduleMotionRead(int pin)
 {
   return digitalRead(pin);
 }

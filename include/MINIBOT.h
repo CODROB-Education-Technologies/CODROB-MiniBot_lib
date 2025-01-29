@@ -34,7 +34,7 @@ public:
   void serialWrite(bool value);
 
   /*********************************** BUTTONS ***********************************/
-  int button1Read();
+  bool button1Read();
 
   /*********************************** LED ***********************************/
   void ledWrite(bool status);
@@ -52,11 +52,11 @@ public:
 
   /*********************************** Magnetic Sensor ***********************************
    */
-  int moduleMagneticRead(int pin);
+  bool moduleMagneticRead(int pin);
 
   /*********************************** Vibration Sensor ***********************************
    */
-  int moduleVibrationDigitalRead(int pin);
+  bool moduleVibrationDigitalRead(int pin);
 
   /*********************************** Ultrasonic Distance Sensor ***********************************
    */
@@ -81,7 +81,7 @@ public:
 
   /*********************************** Motion Sensor ***********************************
    */
-  int moduleMotionRead(int pin);
+  bool moduleMotionRead(int pin);
 
   /*********************************** IR Sensor ***********************************
    */

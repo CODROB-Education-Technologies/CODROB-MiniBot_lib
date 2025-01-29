@@ -15,7 +15,7 @@ void setup()
 void loop()
 {
   // Read button state / Buton durumunu oku
-  if (minibot.button1Read() == LOW)
+  if (minibot.button1Read() == false)
   {
     minibot.serialWrite("Button Pressed!"); // Print button pressed message / Butona basıldığını yazdır
 
