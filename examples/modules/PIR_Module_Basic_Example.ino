@@ -1,31 +1,43 @@
 #include <MINIBOT.h> // MINIBOT kütüphanesi / MINIBOT library
 
-// Create a MINIBOT object / MINIBOT nesnesi oluşturuluyor
+// MINIBOT nesnesi oluşturuluyor / Create a MINIBOT object
 MINIBOT minibot;
 
-#define SENSOR_PIN IO12 // Select sensor pin / Sensörün bağlı olduğu pini seçin.
-                        // IO4 - IO5 - IO12 - IO13 - IO14
+#define SENSOR_PIN IO12 // Sensörün bağlı olduğu pini seçin / Select the sensor pin
+// Desteklenen pinler: IO4 - IO5 - IO12 - IO13 - IO14
+// Supported pins: IO4 - IO5 - IO12 - IO13 - IO14
 
 void setup()
 {
-    minibot.begin();                                                     // Initialize MINIBOT / MINIBOT başlatılıyor
-    minibot.playIntro();                                                 // Play startup melody / Giriş müziği çalınıyor
-    minibot.serialStart(115200);                                         // Start serial communication / Seri haberleşmeyi başlat
-    minibot.serialWrite("Welcome to MiniBot PIR Module Test Firmware!"); // Display welcome message / Hoşgeldiniz mesajını göster
+    minibot.begin(); // MINIBOT başlatılıyor / Initialize MINIBOT
+
+    minibot.playIntro(); // Giriş müziği çalınıyor / Play startup melody
+    // MiniBot açıldığında kısa bir melodi çalar.
+    // MiniBot plays a short melody when powered on.
+
+    minibot.serialStart(115200); // Seri haberleşmeyi başlat / Start serial communication
+    // Bilgisayar ile seri haberleşme için 115200 baud hızında başlatılır.
+    // Starts serial communication at 115200 baud for computer connection.
+
+    minibot.serialWrite("Welcome to MiniBot PIR Module Test Firmware!");
+    // Hoşgeldiniz mesajını seri porta yazdır / Display welcome message on the serial port
 }
 
 void loop()
 {
-    bool motionDetected = minibot.moduleMotionRead(SENSOR_PIN); // PIR sensör verisi / PIR sensor value
-
-    if (motionDetected)
+    // PIR sensöründen hareket algılama verisini oku / Read motion detection data from PIR sensor
+    if (minibot.moduleMotionRead(SENSOR_PIN))
     {
         minibot.serialWrite("Hareket Algılandi! - Motion Detected!");
+        // Hareket algılandıysa, mesajı seri porta yazdır
+        // If motion is detected, print the message to the serial port
     }
     else
     {
         minibot.serialWrite("Hareket Yok! - No Motion!");
+        // Hareket algılanmadıysa, mesajı seri porta yazdır
+        // If no motion is detected, print the message to the serial port
     }
 
-    delay(500);
+    delay(500); // 500 ms bekle, gereksiz tekrarları önlemek için / Wait 500 ms to prevent unnecessary repetitions
 }

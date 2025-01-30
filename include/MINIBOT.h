@@ -7,6 +7,9 @@
 #include <Servo.h>
 #include <DHT.h>
 #include <Adafruit_NeoPixel.h>
+#include <IRremoteESP8266.h>
+#include <IRrecv.h>
+#include <IRutils.h>
 
 // PinS
 #define B1_BUTTON_PIN 0
@@ -29,6 +32,8 @@ public:
    */
   void serialStart(int baundrate);
   void serialWrite(const char *message);
+  void serialWrite(String message);
+  void serialWrite(long value);
   void serialWrite(int value);
   void serialWrite(float value);
   void serialWrite(bool value);
@@ -70,7 +75,6 @@ public:
    */
   void extendSmartLEDPrepare(int pin, int numLEDs);
   void extendSmartLEDFill(int startLED, int endLED, int red, int green, int blue);
-
   void moduleSmartLEDPrepare(int pin);                             // Initialize NeoPixel strip
   void moduleSmartLEDWrite(int led, int red, int green, int blue); // Write RGB values to specific LED
   void moduleSmartLEDRainbowEffect(int wait);                      // Rainbow effect
@@ -85,7 +89,9 @@ public:
 
   /*********************************** IR Sensor ***********************************
    */
-  int moduleIRRead(int pin);
+  String moduleIRReadHex(int pin);
+  int moduleIRReadDecimalx32(int pin);
+  int moduleIRReadDecimalx8(int pin);
 
   /*********************************** Relay Sensor ***********************************
    */
@@ -97,11 +103,19 @@ public:
   void digitalWritePin(int pin, bool value);
 
 private:
-  DHT *dhtSensor; // Pointer to DHT sensor object
-  Servo servoModule;
+  Servo servoModule; // Create a Servo object for controlling the servo motor
   int currentAngle = 0;
+
   void initializeDht(int pin, uint8_t type);
+  DHT *dhtSensor; // Pointer to DHT sensor object
+
   Adafruit_NeoPixel *pixels; // NeoPixel object pointer
+
+  void initializeIR(int pin);
+  IRrecv *irrecv = nullptr; // Pointer to IR receiver / IR alıcısı için pointer
+  decode_results results;   // Stores received IR results / Alınan IR sinyallerini saklar
+  int irPin;                // Store the IR receiver pin / IR alıcı pini sakla
+  long irRawValue = 0;      // Stores last received IR value / En son alınan IR değerini saklar
 };
 
 #else
