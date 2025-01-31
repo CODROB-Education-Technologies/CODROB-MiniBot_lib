@@ -97,7 +97,7 @@ void MINIBOT::moduleServoGoAngle(int pin, int angle, int acceleration)
   // Attach the servo to the specified pin if not already attached
   if (!servoModule.attached())
   {
-    servoModule.attach(pin, 1000, 2000); // Sadece bağlı değilse ata
+    servoModule.attach(pin, 500, 2500); // Sadece bağlı değilse ata
   }
 
   // Ensure angle is within valid bounds (0 to 180 degrees)
@@ -134,7 +134,7 @@ void MINIBOT::initializeDht(int pin, uint8_t type)
   }
 }
 
-int MINIBOT::moduleDhtTempRead(int pin) // Read Temperature
+int MINIBOT::moduleDhtTempReadC(int pin) // Read Temperature
 {
   initializeDht(pin, DHT11); // Ensure DHT11 is initialized
   float temp = dhtSensor->readTemperature();
@@ -145,18 +145,7 @@ int MINIBOT::moduleDhtTempRead(int pin) // Read Temperature
   return static_cast<int>(temp);
 }
 
-int MINIBOT::moduleDhtHumRead(int pin) // Read Humidity
-{
-  initializeDht(pin, DHT11); // Ensure DHT11 is initialized
-  float hum = dhtSensor->readHumidity();
-
-  if (isnan(hum)) // Check if reading failed
-    return -999;
-
-  return static_cast<int>(hum);
-}
-
-int MINIBOT::moduleDthFeelingTemp(int pin) // Calculate Heat Index (Feeling Temperature)
+int MINIBOT::moduleDthFeelingTempC(int pin) // Calculate Heat Index (Feeling Temperature)
 {
   initializeDht(pin, DHT11); // Ensure DHT11 is initialized
 
@@ -168,6 +157,42 @@ int MINIBOT::moduleDthFeelingTemp(int pin) // Calculate Heat Index (Feeling Temp
 
   float heatIndex = dhtSensor->computeHeatIndex(temp, hum, false); // Calculate heat index in Celsius
   return static_cast<int>(heatIndex);
+}
+
+int IOTBOT::moduleDhtTempReadF(int pin) // Read Temperature in Fahrenheit
+{
+  initializeDht(pin, DHT11);                     // Ensure DHT11 is initialized
+  float temp = dhtSensor->readTemperature(true); // **Fahrenheit sıcaklık okuma**
+
+  if (isnan(temp)) // Check if reading failed
+    return -999;
+
+  return static_cast<int>(temp);
+}
+
+int IOTBOT::moduleDthFeelingTempF(int pin) // Calculate Heat Index (Feeling Temperature in Fahrenheit)
+{
+  initializeDht(pin, DHT11); // Ensure DHT11 is initialized
+
+  float temp = dhtSensor->readTemperature(true); // **Fahrenheit sıcaklık okuma**
+  float hum = dhtSensor->readHumidity();         // **Nem okuma**
+
+  if (isnan(temp) || isnan(hum)) // Check if readings failed
+    return -999;
+
+  float heatIndex = dhtSensor->computeHeatIndex(temp, hum, true); // **Fahrenheit olarak hissedilen sıcaklık hesapla**
+  return static_cast<int>(heatIndex);
+}
+
+int MINIBOT::moduleDhtHumRead(int pin) // Read Humidity
+{
+  initializeDht(pin, DHT11); // Ensure DHT11 is initialized
+  float hum = dhtSensor->readHumidity();
+
+  if (isnan(hum)) // Check if reading failed
+    return -999;
+
+  return static_cast<int>(hum);
 }
 
 /*********************************** Magnetic Sensor ***********************************

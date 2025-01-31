@@ -18,9 +18,11 @@ button1Read	KEYWORD2
 
 moduleServoGoAngle	KEYWORD2
 
-moduleDhtTempRead	KEYWORD2
+moduleDhtTempReadC	KEYWORD2
+moduleDthFeelingTempC	KEYWORD2
+moduleDhtTempReadF	KEYWORD2
+moduleDthFeelingTempF	KEYWORD2
 moduleDhtHumRead	KEYWORD2
-moduleDthFeelingTemp	KEYWORD2
 
 moduleMagneticRead	KEYWORD2
 
@@ -43,7 +45,9 @@ getColor	KEYWORD2
 
 moduleMotionRead	KEYWORD2
 
-moduleIRRead	KEYWORD2
+moduleIRReadHex	KEYWORD2
+moduleIRReadDecimalx32	KEYWORD2
+moduleIRReadDecimalx8	KEYWORD2
 
 moduleRelayWrite	KEYWORD2
 

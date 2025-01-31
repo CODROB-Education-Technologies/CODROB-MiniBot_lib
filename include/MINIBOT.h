@@ -51,8 +51,10 @@ public:
   /*********************************** DHT Sensor ***********************************
    */
 
-  int moduleDhtTempRead(int pin);
-  int moduleDhtHumRead(int pin);
+  int moduleDhtTempReadC(int pin);
+  int moduleDhtHumReadC(int pin);
+  int moduleDhtTempReadF(int pin);
+  int moduleDhtHumReadF(int pin);
   int moduleDthFeelingTemp(int pin);
 
   /*********************************** Magnetic Sensor ***********************************
