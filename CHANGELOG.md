@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.2.2] - 2025-01-31
+### Fixed
+- DHT modülü için ifonksiyon isim düzeltmeleri yapıldı. 
+- Seriport fonksiyornları düzeltildi. 
+
 ## [1.2.1] - 2025-01-31
 ### Added
 - DHT için Fahreneght kodlaarı eklendi. 

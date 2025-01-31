@@ -33,38 +33,32 @@ void MINIBOT::serialStart(int baudrate)
   Serial.begin(baudrate);
 }
 
-// Overloaded function for const char* / `const char*` için fonksiyon
-void MINIBOT::serialWrite(const char *message)
+void MINIBOT::serialWrite(const char *message) // Overloaded function for const char* / `const char*` için fonksiyon
 {
   Serial.println(message);
 }
 
-// Overloaded function for String / `String` için özel fonksiyon
-void MINIBOT::serialWrite(String message)
+void MINIBOT::serialWrite(String message) // Overloaded function for String / `String` için özel fonksiyon
 {
   Serial.println(message.c_str()); // Convert String to const char*
 }
 
-// Overloaded function for long / `long` için özel fonksiyon
-void MINIBOT::serialWrite(long value)
+void MINIBOT::serialWrite(long value) // Overloaded function for long / `long` için özel fonksiyon
 {
   Serial.println(String(value).c_str());
 }
 
-// Overloaded function for int / `int` için fonksiyon
-void MINIBOT::serialWrite(int value)
+void MINIBOT::serialWrite(int value) // Overloaded function for int / `int` için fonksiyon
 {
   Serial.println(String(value).c_str());
 }
 
-// Overloaded function for float / `float` için fonksiyon
-void MINIBOT::serialWrite(float value)
+void MINIBOT::serialWrite(float value) // Overloaded function for float / `float` için fonksiyon
 {
   Serial.println(String(value).c_str());
 }
 
-// Overloaded function for bool / `bool` için fonksiyon
-void MINIBOT::serialWrite(bool value)
+void MINIBOT::serialWrite(bool value) // Overloaded function for bool / `bool` için fonksiyon
 {
   Serial.println(value ? "true" : "false");
 }
@@ -159,7 +153,7 @@ int MINIBOT::moduleDthFeelingTempC(int pin) // Calculate Heat Index (Feeling Tem
   return static_cast<int>(heatIndex);
 }
 
-int IOTBOT::moduleDhtTempReadF(int pin) // Read Temperature in Fahrenheit
+int MINIBOT::moduleDhtTempReadF(int pin) // Read Temperature in Fahrenheit
 {
   initializeDht(pin, DHT11);                     // Ensure DHT11 is initialized
   float temp = dhtSensor->readTemperature(true); // **Fahrenheit sıcaklık okuma**
@@ -170,7 +164,7 @@ int IOTBOT::moduleDhtTempReadF(int pin) // Read Temperature in Fahrenheit
   return static_cast<int>(temp);
 }
 
-int IOTBOT::moduleDthFeelingTempF(int pin) // Calculate Heat Index (Feeling Temperature in Fahrenheit)
+int MINIBOT::moduleDthFeelingTempF(int pin) // Calculate Heat Index (Feeling Temperature in Fahrenheit)
 {
   initializeDht(pin, DHT11); // Ensure DHT11 is initialized
 
