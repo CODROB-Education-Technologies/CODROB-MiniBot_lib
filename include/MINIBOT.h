@@ -10,6 +10,10 @@
 #include <IRremoteESP8266.h>
 #include <IRrecv.h>
 #include <IRutils.h>
+#include <WiFi.h>
+#include <ESPAsyncWebServer.h>
+#include <DNSServer.h>
+#include <EEPROM.h>
 
 // PinS
 #define B1_BUTTON_PIN 0
@@ -104,6 +108,25 @@ public:
   int digitalReadPin(int pin);
   void digitalWritePin(int pin, bool value);
 
+  /*********************************** WiFi  ***********************************
+   */
+  void wifiStartAndConnect(const char *ssid, const char *pass);
+  bool wifiConnectionControl();
+  String wifiGetMACAddress();
+  String wifiGetIPAddress();
+
+  /*********************************** Server  ***********************************
+   */
+  void serverStart(const char *mode, const char *ssid, const char *password);
+  void serverCreateLocalPage(const char *url, const char *WEBPageScript, const char *WEBPageCSS, const char *WEBPageHTML);
+  void serverHandleDNS();
+  void serverContinue();
+
+  /*********************************** EEPROM  ***********************************
+   */
+  void eepromWriteInt(int address, int value);
+  int eepromReadInt(int address);
+
 private:
   Servo servoModule; // Create a Servo object for controlling the servo motor
   int currentAngle = 0;
@@ -118,6 +141,11 @@ private:
   decode_results results;   // Stores received IR results / Alınan IR sinyallerini saklar
   int irPin;                // Store the IR receiver pin / IR alıcı pini sakla
   long irRawValue = 0;      // Stores last received IR value / En son alınan IR değerini saklar
+
+  const IPAddress apIP = IPAddress(192, 168, 4, 1);                                // Sabit IP adresi tanımlanıyor / Define static IP address
+  DNSServer dnsServer;                                                             // DNS sunucusu tanımlanıyor / Define DNS Server
+  AsyncWebServer serverCODROB = AsyncWebServer(80);                                // Async Web Server nesnesi oluşturuluyor / Create an Async Web Server object
+  AsyncWebSocket serverCODROBWebSocket = AsyncWebSocket("/serverCODROBWebSocket"); // WebSocket nesnesi tanımlanıyor / Define WebSocket object
 };
 
 #else

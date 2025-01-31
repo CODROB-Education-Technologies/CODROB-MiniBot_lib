@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.2.3] - 2025-01-31
+### Added
+- DHT için Fahreneght kodlaarı eklendi. 
+- Wifi Kütüphaneleri ve fonskiyonları ekleni 
+- Local server fonksiyonaları eklendi. 
+- EEPROM fonksiyonları ekledi.
+
+### Fixed
+- Servo motor ayarları optimize edildi. 
+- Açıklamalar düzeltildi. 
+
 ## [1.2.2] - 2025-01-31
 ### Fixed
 - DHT modülü için ifonksiyon isim düzeltmeleri yapıldı. 

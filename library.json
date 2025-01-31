@@ -1,6 +1,6 @@
 {
   "name": "CODROB_MINIBOT",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Library for MINIBOT, an ESP8266-based programmable device. Visit www.codrob.com.tr for more information.",
   "keywords": [
     "robotics",
@@ -51,6 +51,7 @@
     "adafruit/Adafruit NeoPixel": ">=1.10.6",
     "adafruit/Adafruit Unified Sensor": ">=1.0.3",
     "adafruit/DHT sensor library": ">=1.4.4",
-    "crankyoldgit/IRremoteESP8266": ">=2.8.6"
+    "crankyoldgit/IRremoteESP8266": ">=2.8.6",
+    "esphome/ESPAsyncWebServer-esphome": ">=3.3.0"
   }
 }

@@ -499,3 +499,174 @@ void MINIBOT::digitalWritePin(int pin, bool value)
   pinMode(pin, OUTPUT);
   digitalWrite(pin, value);
 }
+
+/*********************************** WiFi ***********************************/
+void MINIBOT::wifiStartAndConnect(const char *ssid, const char *pass)
+{
+  Serial.printf("[WiFi]: Connection Starting!\r\n[WiFi]: SSID: %s\r\n[WiFi]: Pass: %s\r\n", ssid, pass);
+
+  WiFi.begin(ssid, pass);
+  int count = 0;
+  while (count < 30)
+  {
+    if (WiFi.status() == WL_CONNECTED)
+    {
+      Serial.printf("[WiFi]: Connected!\r\n[WiFi]: Local IP: %s\r\n", WiFi.localIP().toString().c_str());
+      Serial.printf("[WiFi]: MAC Address: %s\r\n", WiFi.macAddress().c_str());
+      return;
+    }
+    Serial.print(".");
+    delay(500);
+    count++;
+  }
+  Serial.println("[WiFi]: Connection Timeout!");
+}
+
+bool MINIBOT::wifiConnectionControl()
+{
+  if (WiFi.status() == WL_CONNECTED)
+  {
+    Serial.println("[WiFi]: Connection OK!");
+    return true;
+  }
+  else
+  {
+    Serial.println("[WiFi]: Connection ERROR!");
+    return false;
+  }
+}
+
+String MINIBOT::wifiGetMACAddress()
+{
+  return WiFi.macAddress();
+}
+
+String MINIBOT::wifiGetIPAddress()
+{
+  return WiFi.localIP().toString();
+}
+
+/*********************************** Server ***********************************/
+void MINIBOT::serverStart(const char *mode, const char *ssid, const char *password)
+{
+  if (strcmp(mode, "STA") == 0)
+  {
+    WiFi.mode(WIFI_STA);
+    WiFi.begin(ssid, password);
+
+    Serial.printf("[STA Mode]: Connecting to WiFi: %s\n", ssid);
+
+    int retries = 30;
+    while (WiFi.status() != WL_CONNECTED && retries > 0)
+    {
+      delay(1000);
+      Serial.print(".");
+      retries--;
+    }
+
+    if (WiFi.status() == WL_CONNECTED)
+    {
+      Serial.println("\n[STA Mode]: Connected!");
+      Serial.printf("[STA Mode]: IP Address: http://%s\n", WiFi.localIP().toString().c_str());
+    }
+    else
+    {
+      Serial.println("\n[STA Mode]: Connection Failed! Switching to AP Mode...");
+      serverStart("AP", ssid, password);
+      return;
+    }
+  }
+  else if (strcmp(mode, "AP") == 0)
+  {
+    WiFi.softAP(ssid, password);
+    WiFi.softAPConfig(IPAddress(192, 168, 4, 1), IPAddress(192, 168, 4, 1), IPAddress(255, 255, 255, 0));
+    dnsServer.start(53, "*", IPAddress(192, 168, 4, 1));
+
+    Serial.printf("[AP Mode]: Access Point Started!\n");
+    Serial.printf("[AP Mode]: SSID: \"%s\"\n", ssid);
+    Serial.printf("[AP Mode]: Password: \"%s\"\n", password);
+    Serial.printf("[AP Mode]: AP IP Address: http://%s\n", WiFi.softAPIP().toString().c_str());
+  }
+
+  // 📌 Sayfaları tanımla
+  serverCODROB.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
+                  {
+      Serial.println("[Local Server]: Root URL Accessed!");
+      request->send(200, "text/plain", "ESP32 Server is Running!"); });
+
+  // 📌 404 Hatası
+  serverCODROB.onNotFound([](AsyncWebServerRequest *request)
+                          {
+      Serial.println("[Local Server]: Received an Unknown Request!");
+      request->send(404, "text/plain", "Not Found"); });
+
+  // 📌 **WebSocket Olaylarını Bağla**
+  serverCODROBWebSocket.onEvent([](AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len)
+                                {
+      if (type == WS_EVT_CONNECT) {
+          Serial.println("WebSocket Client Connected");
+      } else if (type == WS_EVT_DISCONNECT) {
+          Serial.println("WebSocket Client Disconnected");
+      } });
+
+  // 📌 WebSocket'i Sunucuya Bağla
+  serverCODROB.addHandler(&serverCODROBWebSocket);
+
+  // 📌 **En son sunucuyu başlat!**
+  serverCODROB.begin();
+  Serial.println("[Local Server]: Server Started! ✅");
+}
+
+void MINIBOT::serverCreateLocalPage(const char *url, const char *WEBPageScript, const char *WEBPageCSS, const char *WEBPageHTML)
+{
+  // 📌 Sayfa içeriğini oluştur
+  serverCODROB.on(("/" + String(url)).c_str(), HTTP_GET, [WEBPageScript, WEBPageCSS, WEBPageHTML](AsyncWebServerRequest *request)
+                  {
+        char buffer[4096]; // **Buffer Boyutu**: 4096 bayt (Daha büyük içerikleri destekler)
+        int len = snprintf(buffer, sizeof(buffer), WEBPageHTML, WEBPageScript, WEBPageCSS);
+        if (len >= sizeof(buffer)) {
+            Serial.println("[ERROR]: Buffer size insufficient, content truncated!");
+        }
+        request->send(200, "text/html", buffer); });
+
+  if (WiFi.status() == WL_CONNECTED)
+  {
+    Serial.printf("[Local Server]: Page created at: http://%s/%s\n", WiFi.localIP().toString().c_str(), url);
+  }
+  else
+  {
+    Serial.printf("[Local Server]: Page created at: http://%s/%s\n", apIP.toString().c_str(), url);
+  }
+}
+
+void MINIBOT::serverHandleDNS()
+{
+  dnsServer.processNextRequest();
+}
+
+void MINIBOT::serverContinue()
+{
+  if (WiFi.getMode() == WIFI_AP)
+  {
+    serverHandleDNS();
+  }
+}
+
+/*********************************** EEPROM  ***********************************
+ */
+void MINIBOT::eepromWriteInt(int address, int value) // EEPROM'a güvenli bir şekilde int türünde veri yazmak için fonksiyon
+{
+  byte highByte = highByte(value); // int'in yüksek baytını al
+  byte lowByte = lowByte(value);   // int'in düşük baytını al
+
+  EEPROM.write(address, highByte);    // İlk baytı EEPROM'a yaz
+  EEPROM.write(address + 1, lowByte); // İkinci baytı EEPROM'a yaz
+  EEPROM.commit();                    // Değişiklikleri kaydetmek için commit işlemi yapılmalıdır
+}
+
+int MINIBOT::eepromReadInt(int address) // EEPROM'dan int türünde veri okumak için fonksiyon
+{
+  byte highByte = EEPROM.read(address);    // İlk baytı oku
+  byte lowByte = EEPROM.read(address + 1); // İkinci baytı oku
+  return word(highByte, lowByte);          // Yüksek ve düşük baytları birleştirerek int değeri oluştur
+}
