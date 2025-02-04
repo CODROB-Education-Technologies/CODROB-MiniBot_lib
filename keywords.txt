@@ -54,6 +54,9 @@ moduleRelayWrite	KEYWORD2
 digitalReadPin	KEYWORD2
 digitalWritePin	KEYWORD2
 
+eepromWriteInt	KEYWORD2
+eepromReadInt	KEYWORD2
+
 wifiStartAndConnect	KEYWORD2
 wifiConnectionControl	KEYWORD2
 wifiGetMACAddress	KEYWORD2
@@ -64,8 +67,20 @@ serverCreateLocalPage	KEYWORD2
 serverHandleDNS	KEYWORD2
 serverContinue	KEYWORD2
 
-eepromWriteInt	KEYWORD2
-eepromReadInt	KEYWORD2
+fbServerSetandStartWithUser	KEYWORD2
 
+fbServerSetInt	KEYWORD2
+fbServerSetFloat	KEYWORD2
+fbServerSetString	KEYWORD2
+fbServerSetDouble	KEYWORD2
+fbServerSetBool	KEYWORD2
+fbServerSetJSON	KEYWORD2
+
+fbServerGetInt	KEYWORD2
+fbServerGetFloat	KEYWORD2
+fbServerGetString	KEYWORD2
+fbServerGetDouble	KEYWORD2
+fbServerGetBool	KEYWORD2
+fbServerGetJSON	KEYWORD2
 
 #######################################

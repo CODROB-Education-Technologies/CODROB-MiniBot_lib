@@ -10,10 +10,12 @@
 #include <IRremoteESP8266.h>
 #include <IRrecv.h>
 #include <IRutils.h>
-#include <WiFi.h>
+#include <EEPROM.h>
+#include <ESP8266WiFi.h>
 #include <ESPAsyncWebServer.h>
 #include <DNSServer.h>
-#include <EEPROM.h>
+#include <Firebase_ESP_Client.h>
+#include <ArduinoJson.h>
 
 // PinS
 #define B1_BUTTON_PIN 0
@@ -108,6 +110,11 @@ public:
   int digitalReadPin(int pin);
   void digitalWritePin(int pin, bool value);
 
+  /*********************************** EEPROM  ***********************************
+   */
+  void eepromWriteInt(int address, int value);
+  int eepromReadInt(int address);
+
   /*********************************** WiFi  ***********************************
    */
   void wifiStartAndConnect(const char *ssid, const char *pass);
@@ -122,10 +129,26 @@ public:
   void serverHandleDNS();
   void serverContinue();
 
-  /*********************************** EEPROM  ***********************************
+  /*********************************** Firebase Server  ***********************************
    */
-  void eepromWriteInt(int address, int value);
-  int eepromReadInt(int address);
+  // 📡 Firebase Server Functions
+  void fbServerSetandStartWithUser(const char *projectURL, const char *secretKey, const char *userMail, const char *mailPass); // projectURL: YOUR_FIREBASE_PROJECT_ID.firebaseio.com / secretKey: YOUR_FIREBASE_DATABASE_SECRET
+
+  // 🔄 Firebase Database Write Functions
+  void fbServerSetInt(const char *dataPath, int data);
+  void fbServerSetFloat(const char *dataPath, float data);
+  void fbServerSetString(const char *dataPath, String data);
+  void fbServerSetDouble(const char *dataPath, double data);
+  void fbServerSetBool(const char *dataPath, bool data);
+  void fbServerSetJSON(const char *dataPath, String data);
+
+  // 📥 Firebase Database Read Functions
+  int fbServerGetInt(const char *dataPath);
+  float fbServerGetFloat(const char *dataPath);
+  String fbServerGetString(const char *dataPath);
+  double fbServerGetDouble(const char *dataPath);
+  bool fbServerGetBool(const char *dataPath);
+  String fbServerGetJSON(const char *dataPath);
 
 private:
   Servo servoModule; // Create a Servo object for controlling the servo motor
@@ -146,6 +169,11 @@ private:
   DNSServer dnsServer;                                                             // DNS sunucusu tanımlanıyor / Define DNS Server
   AsyncWebServer serverCODROB = AsyncWebServer(80);                                // Async Web Server nesnesi oluşturuluyor / Create an Async Web Server object
   AsyncWebSocket serverCODROBWebSocket = AsyncWebSocket("/serverCODROBWebSocket"); // WebSocket nesnesi tanımlanıyor / Define WebSocket object
+
+  FirebaseData firebaseData;     // Data object to handle Firebase communication
+  FirebaseAuth firebaseAuth;     // Authentication credentials for user verification
+  FirebaseConfig firebaseConfig; // Configuration settings for Firebase
+  char uid[128] = "";            // User ID storage
 };
 
 #else

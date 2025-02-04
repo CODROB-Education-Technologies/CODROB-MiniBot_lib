@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0] - 2025-02-04
+### Added
+- Firebase kütüphaneleri eklendi. 
+
+### Fixed
+- EEPROM fonksiyonları düzeltildi. 
+
 ## [1.2.3] - 2025-01-31
 ### Added
 - DHT için Fahreneght kodlaarı eklendi. 

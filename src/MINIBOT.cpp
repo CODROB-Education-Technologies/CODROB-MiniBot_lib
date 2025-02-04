@@ -500,6 +500,25 @@ void MINIBOT::digitalWritePin(int pin, bool value)
   digitalWrite(pin, value);
 }
 
+/*********************************** EEPROM  ***********************************
+ */
+void MINIBOT::eepromWriteInt(int address, int value) // EEPROM'a güvenli bir şekilde int türünde veri yazmak için fonksiyon
+{
+  byte highByte = highByte(value); // int'in yüksek baytını al
+  byte lowByte = lowByte(value);   // int'in düşük baytını al
+
+  EEPROM.write(address, highByte);    // İlk baytı EEPROM'a yaz
+  EEPROM.write(address + 1, lowByte); // İkinci baytı EEPROM'a yaz
+  EEPROM.commit();                    // Değişiklikleri kaydetmek için commit işlemi yapılmalıdır
+}
+
+int MINIBOT::eepromReadInt(int address) // EEPROM'dan int türünde veri okumak için fonksiyon
+{
+  byte highByte = EEPROM.read(address);    // İlk baytı oku
+  byte lowByte = EEPROM.read(address + 1); // İkinci baytı oku
+  return word(highByte, lowByte);          // Yüksek ve düşük baytları birleştirerek int değeri oluştur
+}
+
 /*********************************** WiFi ***********************************/
 void MINIBOT::wifiStartAndConnect(const char *ssid, const char *pass)
 {
@@ -652,21 +671,215 @@ void MINIBOT::serverContinue()
   }
 }
 
-/*********************************** EEPROM  ***********************************
- */
-void MINIBOT::eepromWriteInt(int address, int value) // EEPROM'a güvenli bir şekilde int türünde veri yazmak için fonksiyon
-{
-  byte highByte = highByte(value); // int'in yüksek baytını al
-  byte lowByte = lowByte(value);   // int'in düşük baytını al
+/*********************************** Firebase Server Functions ***********************************/
 
-  EEPROM.write(address, highByte);    // İlk baytı EEPROM'a yaz
-  EEPROM.write(address + 1, lowByte); // İkinci baytı EEPROM'a yaz
-  EEPROM.commit();                    // Değişiklikleri kaydetmek için commit işlemi yapılmalıdır
+// Initialize Firebase connection with SignUp Authentication
+void MINIBOT::fbServerSetandStartWithUser(const char *projectURL, const char *secretKey, const char *userMail, const char *mailPass)
+{
+  firebaseData.setResponseSize(1024); // Optimize memory usage
+
+  // Firebase Configuration Settings
+  firebaseConfig.api_key = secretKey;
+  firebaseConfig.database_url = projectURL;
+  firebaseAuth.user.email = userMail;
+  firebaseAuth.user.password = mailPass;
+
+  // Zaman aşımı ayarları
+  firebaseConfig.timeout.socketConnection = 10 * 1000; // 10 saniye bağlantı zaman aşımı
+
+  // Token durumu izleme ayarı
+  // firebaseConfig.token_status_callback = tokenStatusCallback;
+  firebaseConfig.max_token_generation_retry = 5; // Daha fazla token yenileme denemesi
+
+  // Wi-Fi bağlantısı kaybolduğunda otomatik yeniden bağlanma
+  Firebase.reconnectWiFi(true);
+
+  // Firebase başlat
+  Firebase.begin(&firebaseConfig, &firebaseAuth);
+
+  Serial.println("[Firebase]: Verifying user credentials...");
+  uint8_t id_count = 0;
+  while (firebaseAuth.token.uid == "" && id_count < 50)
+  {
+    Serial.print('.');
+    delay(500);
+    id_count++;
+  }
+  if (firebaseAuth.token.uid == "")
+  {
+    Serial.println("\n[ERROR]: Authentication timeout.");
+  }
+  else
+  {
+    if (Firebase.ready())
+    {
+      strncpy(uid, firebaseAuth.token.uid.c_str(), 128 - 1); // UID'yi kopyala ve taşma kontrolü yap
+      uid[128 - 1] = '\0';                                   // Diziyi null karakter ile sonlandır
+      Serial.print("\n[Info]: Doğrulanan Kimlik ID: ");
+      Serial.println(uid);
+    }
+    else
+    {
+      Serial.print("[ERROR]: Sign-up failed. Reason: ");
+      Serial.println(firebaseData.errorReason());
+    }
+  }
 }
 
-int MINIBOT::eepromReadInt(int address) // EEPROM'dan int türünde veri okumak için fonksiyon
+/*********************************** Firebase Write Functions ***********************************/
+
+void MINIBOT::fbServerSetInt(const char *dataPath, int data)
 {
-  byte highByte = EEPROM.read(address);    // İlk baytı oku
-  byte lowByte = EEPROM.read(address + 1); // İkinci baytı oku
-  return word(highByte, lowByte);          // Yüksek ve düşük baytları birleştirerek int değeri oluştur
+  // Corrected function call
+  if (Firebase.RTDB.setInt(&firebaseData, dataPath, data))
+  {
+    Serial.println("[SUCCESS]: Integer data sent successfully!");
+  }
+  else
+  {
+    Serial.print("[ERROR]: Failed to send integer data. ");
+    Serial.printf("HTTP Code: %d\n", firebaseData.httpCode());
+    Serial.println("Reason: " + firebaseData.errorReason());
+  }
+}
+
+void MINIBOT::fbServerSetFloat(const char *dataPath, float data)
+{
+  if (Firebase.RTDB.setFloat(&firebaseData, dataPath, data))
+  {
+    Serial.println("[SUCCESS]: Float data sent successfully!");
+  }
+  else
+  {
+    Serial.print("[ERROR]: Failed to send float data. ");
+    Serial.printf("HTTP Code: %d\n", firebaseData.httpCode());
+    Serial.println("Reason: " + firebaseData.errorReason());
+  }
+}
+
+void MINIBOT::fbServerSetString(const char *dataPath, String data)
+{
+  if (Firebase.RTDB.setString(&firebaseData, dataPath, data))
+  {
+    Serial.println("[SUCCESS]: String data sent successfully!");
+  }
+  else
+  {
+    Serial.print("[ERROR]: Failed to send string data. ");
+    Serial.printf("HTTP Code: %d\n", firebaseData.httpCode());
+    Serial.println("Reason: " + firebaseData.errorReason());
+  }
+}
+
+void MINIBOT::fbServerSetDouble(const char *dataPath, double data)
+{
+  if (Firebase.RTDB.setDouble(&firebaseData, dataPath, data))
+  {
+    Serial.println("[SUCCESS]: Double data sent successfully!");
+  }
+  else
+  {
+    Serial.print("[ERROR]: Failed to send double data. ");
+    Serial.printf("HTTP Code: %d\n", firebaseData.httpCode());
+    Serial.println("Reason: " + firebaseData.errorReason());
+  }
+}
+
+void MINIBOT::fbServerSetBool(const char *dataPath, bool data)
+{
+  if (Firebase.RTDB.setBool(&firebaseData, dataPath, data))
+  {
+    Serial.println("[SUCCESS]: Boolean data sent successfully!");
+  }
+  else
+  {
+    Serial.print("[ERROR]: Failed to send boolean data. ");
+    Serial.printf("HTTP Code: %d\n", firebaseData.httpCode());
+    Serial.println("Reason: " + firebaseData.errorReason());
+  }
+}
+
+void MINIBOT::fbServerSetJSON(const char *dataPath, String data)
+{
+  FirebaseJson json;
+  json.set(dataPath, data);
+
+  if (Firebase.RTDB.setJSON(&firebaseData, dataPath, &json))
+  {
+    Serial.println("[SUCCESS]: JSON data sent successfully!");
+  }
+  else
+  {
+    Serial.print("[ERROR]: Failed to send JSON data. ");
+    Serial.printf("HTTP Code: %d\n", firebaseData.httpCode());
+    Serial.println("Reason: " + firebaseData.errorReason());
+  }
+}
+
+/*********************************** Firebase Read Functions ***********************************/
+
+int MINIBOT::fbServerGetInt(const char *dataPath)
+{
+  if (Firebase.RTDB.getInt(&firebaseData, dataPath))
+  {
+    Serial.println("[SUCCESS]: Integer data retrieved successfully!");
+    return firebaseData.intData();
+  }
+  Serial.println("[ERROR]: Failed to retrieve integer data.");
+  return -1;
+}
+
+float MINIBOT::fbServerGetFloat(const char *dataPath)
+{
+  if (Firebase.RTDB.getFloat(&firebaseData, dataPath))
+  {
+    Serial.println("[SUCCESS]: Float data retrieved successfully!");
+    return firebaseData.floatData();
+  }
+  Serial.println("[ERROR]: Failed to retrieve float data.");
+  return -1.0;
+}
+
+String MINIBOT::fbServerGetString(const char *dataPath)
+{
+  if (Firebase.RTDB.getString(&firebaseData, dataPath))
+  {
+    Serial.println("[SUCCESS]: String data retrieved successfully!");
+    return firebaseData.stringData();
+  }
+  Serial.println("[ERROR]: Failed to retrieve string data.");
+  return "";
+}
+
+double MINIBOT::fbServerGetDouble(const char *dataPath)
+{
+  if (Firebase.RTDB.getDouble(&firebaseData, dataPath))
+  {
+    Serial.println("[SUCCESS]: Double data retrieved successfully!");
+    return firebaseData.doubleData();
+  }
+  Serial.println("[ERROR]: Failed to retrieve double data.");
+  return -1.0;
+}
+
+bool MINIBOT::fbServerGetBool(const char *dataPath)
+{
+  if (Firebase.RTDB.getBool(&firebaseData, dataPath))
+  {
+    Serial.println("[SUCCESS]: Boolean data retrieved successfully!");
+    return firebaseData.boolData();
+  }
+  Serial.println("[ERROR]: Failed to retrieve boolean data.");
+  return false;
+}
+
+String MINIBOT::fbServerGetJSON(const char *dataPath)
+{
+  if (Firebase.RTDB.getJSON(&firebaseData, dataPath))
+  {
+    Serial.println("[SUCCESS]: JSON data retrieved successfully!");
+    return firebaseData.jsonString();
+  }
+  Serial.println("[ERROR]: Failed to retrieve JSON data.");
+  return "{}";
 }
