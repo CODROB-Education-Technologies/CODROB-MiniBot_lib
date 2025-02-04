@@ -1,6 +1,6 @@
-#include <MINIBOT.h> // 📌 MINIBOT Kütüphanesi / MINIBOT Library
+#include <MINIBOT.h> // 📌 minibot Kütüphanesi / minibot Library
 
-MINIBOT MINIBOT; // 📌 MINIBOT Nesnesi / MINIBOT Object
+MINIBOT minibot; // 📌 minibot Nesnesi / minibot Object
 
 // 📌 **Web Sayfası İçeriği (HTML, CSS, JavaScript)**
 
@@ -9,7 +9,7 @@ MINIBOT MINIBOT; // 📌 MINIBOT Nesnesi / MINIBOT Object
 const char WEBPageScript[] PROGMEM = R"rawliteral(
 <script>
   function sayHello() {
-    alert("Hello from MINIBOT!");
+    alert("Hello from minibot!");
   }
 </script>
 )rawliteral";
@@ -29,12 +29,12 @@ const char WEBPageHTML[] PROGMEM = R"rawliteral(
 <!DOCTYPE html>
 <html>
 <head>
-  <title>MINIBOT Web Server</title>
+  <title>minibot Web Server</title>
   %s <!-- CSS Dosyası Buraya Eklenir -->
   %s <!-- JavaScript Dosyası Buraya Eklenir -->
 </head>
 <body>
-  <h1>MINIBOT Web Sayfası</h1>
+  <h1>minibot Web Sayfası</h1>
   <button onclick="sayHello()">Tıklayın</button>
 </body>
 </html>
@@ -50,23 +50,23 @@ const char *ap_password = "12345678";  // 📌 AP Modu için Şifre / AP Mode Pa
 // 📌 **Kurulum Fonksiyonu (Setup)**
 void setup()
 {
-  MINIBOT.serialStart(115200); // 📌 **Seri Haberleşmeyi Başlat / Start Serial Communication**
+  minibot.serialStart(115200); // 📌 **Seri Haberleşmeyi Başlat / Start Serial Communication**
 
   // 📌 **STA veya AP Modunda Bağlantı Kur**
-  MINIBOT.serverStart("STA", wifi_ssid, wifi_password);
+  minibot.serverStart("STA", wifi_ssid, wifi_password);
 
   // 📌 **Eğer STA bağlantısı başarısız olursa AP moduna geç**
-  if (!MINIBOT.wifiConnectionControl())
+  if (!minibot.wifiConnectionControl())
   {
-    MINIBOT.serverStart("AP", ap_ssid, ap_password);
+    minibot.serverStart("AP", ap_ssid, ap_password);
   }
 
   // 📌 **ESP32 Üzerinde Web Sayfasını Yayınla**
-  MINIBOT.serverCreateLocalPage("dashboard", WEBPageScript, WEBPageCSS, WEBPageHTML);
+  minibot.serverCreateLocalPage("dashboard", WEBPageScript, WEBPageCSS, WEBPageHTML);
 }
 
 // 📌 **Ana Döngü (Loop)**
 void loop()
 {
-  MINIBOT.serverContinue(); // 📌 **AP modunda DNS yönlendirmeyi sürdür**
+  minibot.serverContinue(); // 📌 **AP modunda DNS yönlendirmeyi sürdür**
 }
