@@ -1,6 +1,6 @@
-#include <MINIBOT.h> // 📌 minibot Kütüphanesi / minibot Library
+#include <MINIBOT.h> // 📌 MINIBOT Kütüphanesi / MINIBOT Library
 
-MINIBOT minibot; // 📌 minibot Nesnesi / minibot Object
+MINIBOT MINIBOT; // 📌 MINIBOT Nesnesi / MINIBOT Object
 
 // 📌 **Web Sayfası İçeriği (HTML, CSS, JavaScript)**
 
@@ -9,7 +9,7 @@ MINIBOT minibot; // 📌 minibot Nesnesi / minibot Object
 const char WEBPageScript[] PROGMEM = R"rawliteral(
 <script>
   function sayHello() {
-    alert("Hello from minibot!");
+    alert("Hello from MINIBOT!");
   }
 </script>
 )rawliteral";
@@ -34,7 +34,7 @@ const char WEBPageHTML[] PROGMEM = R"rawliteral(
   %s <!-- JavaScript Dosyası Buraya Eklenir -->
 </head>
 <body>
-  <h1>minibot Web Sayfası</h1>
+  <h1>MINIBOT Web Sayfası</h1>
   <button onclick="sayHello()">Tıklayın</button>
 </body>
 </html>
@@ -47,17 +47,17 @@ const char *ap_password = "12345678";  // 📌 AP Modu için Şifre / AP Mode Pa
 // 📌 **Kurulum Fonksiyonu (Setup)**
 void setup()
 {
-  minibot.serialStart(115200); // 📌 **Seri Haberleşmeyi Başlat / Start Serial Communication**
+  MINIBOT.serialStart(115200); // 📌 **Seri Haberleşmeyi Başlat / Start Serial Communication**
 
   // 📌 **ESP32'yi Erişim Noktası (AP) Olarak Başlat**
-  minibot.serverStart("AP", ap_ssid, ap_password);
+  MINIBOT.serverStart("AP", ap_ssid, ap_password);
 
   // 📌 **ESP32 Üzerinde Web Sayfasını Yayınla**
-  minibot.serverCreateLocalPage("dashboard", WEBPageScript, WEBPageCSS, WEBPageHTML);
+  MINIBOT.serverCreateLocalPage("dashboard", WEBPageScript, WEBPageCSS, WEBPageHTML);
 }
 
 // 📌 **Ana Döngü (Loop)**
 void loop()
 {
-  minibot.serverContinue(); // 📌 **AP modunda DNS yönlendirmeyi sürdür**
+  MINIBOT.serverContinue(); // 📌 **AP modunda DNS yönlendirmeyi sürdür**
 }
