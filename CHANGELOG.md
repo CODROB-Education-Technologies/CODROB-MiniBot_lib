@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.4.2] - 2025-02-11
+### Fixed
+- Firebase ve Wifi örnek uygulamalrındaki eksiklikler düzeltildi.  
+
 ## [1.4.0] - 2025-02-08
 ### Added
 - Örnek uygulamalar düzeltildi.  

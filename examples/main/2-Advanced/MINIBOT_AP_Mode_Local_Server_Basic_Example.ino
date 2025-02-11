@@ -1,6 +1,6 @@
 #include <MINIBOT.h> // 📌 MINIBOT Kütüphanesi / MINIBOT Library
 
-MINIBOT MINIBOT; // 📌 MINIBOT Nesnesi / MINIBOT Object
+MINIBOT minibot; // 📌 MINIBOT Nesnesi / MINIBOT Object
 
 // 📌 **Web Sayfası İçeriği (HTML, CSS, JavaScript)**
 
@@ -9,7 +9,7 @@ MINIBOT MINIBOT; // 📌 MINIBOT Nesnesi / MINIBOT Object
 const char WEBPageScript[] PROGMEM = R"rawliteral(
 <script>
   function sayHello() {
-    alert("Hello from MINIBOT!");
+    alert("Merhaba MINIBOT!");
   }
 </script>
 )rawliteral";
@@ -27,8 +27,9 @@ const char WEBPageCSS[] PROGMEM = R"rawliteral(
 // ESP32 tarafından sunulacak HTML kodu
 const char WEBPageHTML[] PROGMEM = R"rawliteral(
 <!DOCTYPE html>
-<html>
+<html lang="tr">
 <head>
+  <meta charset="UTF-8">
   <title>MINIBOT Web Server</title>
   %s <!-- CSS Dosyası Buraya Eklenir -->
   %s <!-- JavaScript Dosyası Buraya Eklenir -->
@@ -41,23 +42,23 @@ const char WEBPageHTML[] PROGMEM = R"rawliteral(
 )rawliteral";
 
 // 📌 **Erişim Noktası (AP) Modu İçin Wi-Fi Bilgileri**
-const char *ap_ssid = "CODROB Server"; // 📌 AP Modu için SSID / AP Mode SSID
-const char *ap_password = "12345678";  // 📌 AP Modu için Şifre / AP Mode Password (En az 8 karakter)
+const char AP_SSID = "CODROB Server"; // 📌 AP Modu için SSID / AP Mode SSID
+const char AP_PASS = "12345678";      // 📌 AP Modu için Şifre / AP Mode Password (En az 8 karakter)
 
 // 📌 **Kurulum Fonksiyonu (Setup)**
 void setup()
 {
-  MINIBOT.serialStart(115200); // 📌 **Seri Haberleşmeyi Başlat / Start Serial Communication**
+  minibot.serialStart(115200); // 📌 **Seri Haberleşmeyi Başlat / Start Serial Communication**
 
   // 📌 **ESP32'yi Erişim Noktası (AP) Olarak Başlat**
-  MINIBOT.serverStart("AP", ap_ssid, ap_password);
+  minibot.serverStart("AP", AP_SSID, AP_PASS);
 
   // 📌 **ESP32 Üzerinde Web Sayfasını Yayınla**
-  MINIBOT.serverCreateLocalPage("dashboard", WEBPageScript, WEBPageCSS, WEBPageHTML);
+  minibot.serverCreateLocalPage("demo", WEBPageScript, WEBPageCSS, WEBPageHTML); // Cihaza Bağlanın ve linke gidin: 192.168.4.1/demo / Connect to device and goto link: 192.168.4.1/demo
 }
 
 // 📌 **Ana Döngü (Loop)**
 void loop()
 {
-  MINIBOT.serverContinue(); // 📌 **AP modunda DNS yönlendirmeyi sürdür**
+  minibot.serverContinue(); // 📌 **AP modunda DNS yönlendirmeyi sürdür**
 }
