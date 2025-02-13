@@ -27,7 +27,7 @@ const char WEBPageCSS[] PROGMEM = R"rawliteral(
 )rawliteral";
 
 // ✅ **HTML (Web Sayfası İçeriği)**
-// ESP32 tarafından sunulacak HTML kodu
+// MINIBOT tarafından sunulacak HTML kodu
 const char WEBPageHTML[] PROGMEM = R"rawliteral(
 <!DOCTYPE html>
 <html lang="tr">
@@ -48,12 +48,12 @@ const char WEBPageHTML[] PROGMEM = R"rawliteral(
 void setup()
 {
   // 📌 **Seri Haberleşmeyi Başlat / Start Serial Communication**
-  minibot.serialStart(115200); 
+  minibot.serialStart(115200);
 
-  // 📌 **ESP32'yi Erişim Noktası (AP) Olarak Başlat**
+  // 📌 **MINIBOT'yi Erişim Noktası (AP) Olarak Başlat**
   minibot.serverStart("AP", AP_SSID, AP_PASS);
 
-  // 📌 **ESP32 Üzerinde Web Sayfasını Yayınla**
+  // 📌 **MINIBOT Üzerinde Web Sayfasını Yayınla**
   minibot.serverCreateLocalPage("demopage", WEBPageScript, WEBPageCSS, WEBPageHTML); // Cihaza Bağlanın ve linke gidin: 192.168.4.1/demo / Connect to device and goto link: 192.168.4.1/demo
 }
 

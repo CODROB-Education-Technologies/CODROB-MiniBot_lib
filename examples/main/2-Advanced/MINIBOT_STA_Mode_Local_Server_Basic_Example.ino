@@ -63,7 +63,7 @@ void setup()
     minibot.serverStart("AP", AP_SSID, AP_PASS);
   }
 
-  // 📌 **ESP32 Üzerinde Web Sayfasını Yayınla**
+  // 📌 **MINIBOT Üzerinde Web Sayfasını Yayınla**
   minibot.serverCreateLocalPage("demopage", WEBPageScript, WEBPageCSS, WEBPageHTML); // Cihaza Bağlanın ve linke gidin: 192.168.4.1/demo / Connect to device and goto link: 192.168.4.1/demo
 }
 
