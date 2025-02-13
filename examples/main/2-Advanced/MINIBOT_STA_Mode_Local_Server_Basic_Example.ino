@@ -31,7 +31,7 @@ const char WEBPageCSS[] PROGMEM = R"rawliteral(
 )rawliteral";
 
 // ✅ **HTML (Web Sayfası İçeriği)**
-// ESP32 tarafından sunulacak HTML kodu
+// MINIBOT tarafından sunulacak HTML kodu
 const char WEBPageHTML[] PROGMEM = R"rawliteral(
 <!DOCTYPE html>
 <html lang="tr">
@@ -50,9 +50,9 @@ const char WEBPageHTML[] PROGMEM = R"rawliteral(
 
 // 📌 **Kurulum Fonksiyonu (Setup)**
 void setup()
-{  
+{
   // 📌 **Seri Haberleşmeyi Başlat / Start Serial Communication**
-  minibot.serialStart(115200); 
+  minibot.serialStart(115200);
 
   // 📌 **STA veya AP Modunda Bağlantı Kur**
   minibot.serverStart("STA", WIFI_SSID, WIFI_PASS);

@@ -636,17 +636,23 @@ void MINIBOT::serverStart(const char *mode, const char *ssid, const char *passwo
   Serial.println("[Local Server]: Server Started! ✅");
 }
 
-void MINIBOT::serverCreateLocalPage(const char *url, const char *WEBPageScript, const char *WEBPageCSS, const char *WEBPageHTML)
+void ROLEBOT::serverCreateLocalPage(const char *url, const char *WEBPageScript, const char *WEBPageCSS, const char *WEBPageHTML, size_t bufferSize)
 {
   // 📌 Sayfa içeriğini oluştur
-  serverCODROB.on(("/" + String(url)).c_str(), HTTP_GET, [WEBPageScript, WEBPageCSS, WEBPageHTML](AsyncWebServerRequest *request)
+  serverCODROB.on(("/" + String(url)).c_str(), HTTP_GET, [WEBPageScript, WEBPageCSS, WEBPageHTML, bufferSize](AsyncWebServerRequest *request)
                   {
-        char buffer[4096]; // **Buffer Boyutu**: 4096 bayt (Daha büyük içerikleri destekler)
-        int len = snprintf(buffer, sizeof(buffer), WEBPageHTML, WEBPageScript, WEBPageCSS);
-        if (len >= sizeof(buffer)) {
-            Serial.println("[ERROR]: Buffer size insufficient, content truncated!");
-        }
-        request->send(200, "text/html", buffer); });
+                    // Buffer boyutu kullanıcının belirttiği veya varsayılan değerle tanımlanır
+                    char *buffer = new char[bufferSize];
+                    int len = snprintf(buffer, bufferSize, WEBPageHTML, WEBPageScript, WEBPageCSS);
+
+                    if (len >= bufferSize)
+                    {
+                      Serial.println("[ERROR]: Buffer size insufficient, content truncated!");
+                    }
+
+                    request->send(200, "text/html", buffer);
+                    delete[] buffer; // Dinamik olarak ayrılan belleği serbest bırakın
+                  });
 
   if (WiFi.status() == WL_CONNECTED)
   {
