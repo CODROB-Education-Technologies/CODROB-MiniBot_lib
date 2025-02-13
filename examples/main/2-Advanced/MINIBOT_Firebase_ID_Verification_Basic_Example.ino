@@ -22,6 +22,19 @@ void setup()
     // 🔗 Step 1: Connect to Wi-Fi
     minibot.wifiStartAndConnect(WIFI_SSID, WIFI_PASS);
 
+    if (!minibot.wifiConnectionControl())
+    {
+        minibot.serialWrite("Device Stopped!");
+        while (true) // Endless loop | Sonsuz döngü
+        {
+            if (minibot.wifiConnectionControl())
+            {
+                minibot.serialWrite("Connection Success! Reworking..");
+                break; // Exit the loop, continue.| Döngüden çık, devam et.
+            }
+        }
+    }
+
     // 🔥 Step 2: Initialize Firebase
     minibot.fbServerSetandStartWithUser(FIREBASE_PROJECT_URL, FIREBASE_API_KEY, USER_EMAIL, USER_PASSWORD);
 
