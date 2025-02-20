@@ -4,6 +4,7 @@
 #if defined(ESP8266)
 #include <Arduino.h>
 #include <EEPROM.h>
+#include <MINIBOT_Config.h>
 
 #if defined(USE_SERVO)
 #include <Servo.h>
@@ -224,7 +225,8 @@ private:
   FirebaseAuth firebaseAuth;     // Authentication credentials for user verification
   FirebaseConfig firebaseConfig; // Configuration settings for Firebase
   char uid[128] = "";            // User ID storage
-#endif };
+#endif
+};
 
 #else
 #error "MINIBOT sadece ESP8266 için desteklenmektedir."

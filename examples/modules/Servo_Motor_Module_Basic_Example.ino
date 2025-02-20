@@ -1,5 +1,3 @@
-#define USE_SERVO
-
 #include <MINIBOT.h> // MINIBOT kütüphanesi / MINIBOT library
 
 // MINIBOT nesnesi oluşturuluyor / Create a MINIBOT object

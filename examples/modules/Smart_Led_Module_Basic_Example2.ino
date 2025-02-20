@@ -1,5 +1,3 @@
-#define USE_NEOPIXEL
-
 #include <MINIBOT.h> // MINIBOT kütüphanesi / MINIBOT library
 
 // MINIBOT nesnesi oluşturuluyor / Create a MINIBOT object
