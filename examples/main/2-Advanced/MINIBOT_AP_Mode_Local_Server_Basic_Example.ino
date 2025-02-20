@@ -1,3 +1,5 @@
+#define USE_SERVER
+
 #include <MINIBOT.h> // 📌 MINIBOT Kütüphanesi / MINIBOT Library
 
 MINIBOT minibot; // 📌 MINIBOT Nesnesi / MINIBOT Object

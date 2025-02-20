@@ -1,3 +1,5 @@
+#define USE_IR
+
 #include <MINIBOT.h> // MINIBOT kütüphanesi / MINIBOT library
 
 // MINIBOT nesnesi oluşturuluyor / Create a MINIBOT object

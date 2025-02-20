@@ -2,20 +2,46 @@
 #define MINIBOT_H
 
 #if defined(ESP8266)
-
 #include <Arduino.h>
+#include <EEPROM.h>
+
+#if defined(USE_SERVO)
 #include <Servo.h>
+#endif
+
+#if defined(USE_DHT)
 #include <DHT.h>
+#endif
+
+#if defined(USE_NEOPIXEL)
 #include <Adafruit_NeoPixel.h>
+#endif
+
+#if defined(USE_IR)
 #include <IRremoteESP8266.h>
 #include <IRrecv.h>
 #include <IRutils.h>
-#include <EEPROM.h>
-#include <ESP8266WiFi.h>
+#endif
+
+#if defined(USE_SERVER)
+#ifndef USE_WIFI
+#define USE_WIFI
+#endif
 #include <ESPAsyncWebServer.h>
 #include <DNSServer.h>
+#endif
+
+#if defined(USE_FIREBASE)
+#ifndef USE_WIFI
+#define USE_WIFI
+#endif
 #include <Firebase_ESP_Client.h>
 #include <ArduinoJson.h>
+#endif
+
+#if defined(USE_WIFI)
+#include <ESP8266WiFi.h>
+#endif
 
 // PinS
 #define B1_BUTTON_PIN 0
@@ -52,17 +78,19 @@ public:
 
   /*********************************** Servo Motor Sensor ***********************************
    */
+#if defined(USE_SERVO)
   void moduleServoGoAngle(int pin, int angle, int acceleration);
+#endif
 
   /*********************************** DHT Sensor ***********************************
    */
-
+#if defined(USE_DHT)
   int moduleDhtTempReadC(int pin);
   int moduleDthFeelingTempC(int pin);
   int moduleDhtTempReadF(int pin);
   int moduleDthFeelingTempF(int pin);
   int moduleDhtHumRead(int pin);
-
+#endif
   /*********************************** Magnetic Sensor ***********************************
    */
   bool moduleMagneticRead(int pin);
@@ -78,9 +106,13 @@ public:
   /*********************************** Trafic Ligh Sensor ***********************************
    */
   void moduleTraficLightWrite(bool red, bool yellow, bool green);
+  void moduleTraficLightWriteRed(bool red);
+  void moduleTraficLightWriteYellow(bool yellow);
+  void moduleTraficLightWriteGreen(bool green);
 
   /*********************************** Smart LED Sensor ***********************************
    */
+#if defined(USE_NEOPIXEL)
   void extendSmartLEDPrepare(int pin, int numLEDs);
   void extendSmartLEDFill(int startLED, int endLED, int red, int green, int blue);
   void moduleSmartLEDPrepare(int pin);                             // Initialize NeoPixel strip
@@ -90,7 +122,7 @@ public:
   void moduleSmartLEDTheaterChaseEffect(uint32_t color, int wait); // Theater chase effect
   void moduleSmartLEDColorWipeEffect(uint32_t color, int wait);    // Color wipe effect
   uint32_t getColor(int red, int green, int blue);                 // Helper function for creating colors
-
+#endif
   /*********************************** Motion Sensor ***********************************
    */
   bool moduleMotionRead(int pin);
@@ -117,20 +149,25 @@ public:
 
   /*********************************** WiFi  ***********************************
    */
+#if defined(USE_WIFI)
   void wifiStartAndConnect(const char *ssid, const char *pass);
   bool wifiConnectionControl();
   String wifiGetMACAddress();
   String wifiGetIPAddress();
+#endif
 
   /*********************************** Server  ***********************************
    */
+#if defined(USE_SERVER)
   void serverStart(const char *mode, const char *ssid, const char *password);
-  void serverCreateLocalPage(const char *url, const char *WEBPageScript, const char *WEBPageCSS, const char *WEBPageHTML, size_t bufferSize = 1024);
+  void serverCreateLocalPage(const char *url, const char *WEBPageScript, const char *WEBPageCSS, const char *WEBPageHTML, size_t bufferSize = 4096);
   void serverHandleDNS();
   void serverContinue();
+#endif
 
   /*********************************** Firebase Server  ***********************************
    */
+#if defined(USE_FIREBASE)
   // 📡 Firebase Server Functions
   void fbServerSetandStartWithUser(const char *projectURL, const char *secretKey, const char *userMail, const char *mailPass); // projectURL: YOUR_FIREBASE_PROJECT_ID.firebaseio.com / secretKey: YOUR_FIREBASE_DATABASE_SECRET
 
@@ -149,15 +186,23 @@ public:
   double fbServerGetDouble(const char *dataPath);
   bool fbServerGetBool(const char *dataPath);
   String fbServerGetJSON(const char *dataPath);
-
+#endif
 private:
+#if defined(USE_SERVO)
   Servo servoModule; // Create a Servo object for controlling the servo motor
   int currentAngle = 0;
+#endif
 
+#if defined(USE_DHT)
   void initializeDht(int pin, uint8_t type);
   DHT *dhtSensor; // Pointer to DHT sensor object
+#endif
 
+#if defined(USE_NEOPIXEL)
   Adafruit_NeoPixel *pixels; // NeoPixel object pointer
+#endif
+
+#if defined(USE_IR)
 
   void initializeIR(int pin);
   IRrecv *irrecv = nullptr; // Pointer to IR receiver / IR alıcısı için pointer
@@ -165,16 +210,21 @@ private:
   int irPin;                // Store the IR receiver pin / IR alıcı pini sakla
   long irRawValue = 0;      // Stores last received IR value / En son alınan IR değerini saklar
 
-  const IPAddress apIP = IPAddress(192, 168, 4, 1);                                // Sabit IP adresi tanımlanıyor / Define static IP address
-  DNSServer dnsServer;                                                             // DNS sunucusu tanımlanıyor / Define DNS Server
-  AsyncWebServer serverCODROB = AsyncWebServer(80);                                // Async Web Server nesnesi oluşturuluyor / Create an Async Web Server object
-  AsyncWebSocket serverCODROBWebSocket = AsyncWebSocket("/serverCODROBWebSocket"); // WebSocket nesnesi tanımlanıyor / Define WebSocket object
+#endif
 
+#if defined(USE_SERVER)
+  const IPAddress apIP = IPAddress(192, 168, 4, 1); // Sabit IP adresi tanımlanıyor / Define static IP address
+  DNSServer dnsServer;                              // DNS sunucusu tanımlanıyor / Define DNS Server
+  AsyncWebServer serverCODROB{80};                  // Web server objesi
+  AsyncWebSocket *serverCODROBWebSocket;            // Pointer olarak tanımla
+#endif
+
+#if defined(USE_FIREBASE)
   FirebaseData firebaseData;     // Data object to handle Firebase communication
   FirebaseAuth firebaseAuth;     // Authentication credentials for user verification
   FirebaseConfig firebaseConfig; // Configuration settings for Firebase
   char uid[128] = "";            // User ID storage
-};
+#endif };
 
 #else
 #error "MINIBOT sadece ESP8266 için desteklenmektedir."

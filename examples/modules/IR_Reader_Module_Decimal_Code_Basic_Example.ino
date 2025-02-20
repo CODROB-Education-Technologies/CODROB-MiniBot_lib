@@ -1,4 +1,6 @@
-#include <MINIBOT.h> // MINIBOT kutuphanesi / MINIBOT library
+#define USE_IR
+#
+include <MINIBOT.h> // MINIBOT kutuphanesi / MINIBOT library
 
 // MINIBOT nesnesi olusturuluyor / Create a MINIBOT object
 MINIBOT minibot;

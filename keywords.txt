@@ -32,6 +32,9 @@ moduleVibrationAnalogRead	KEYWORD2
 moduleUltrasonicDistanceRead	KEYWORD2
 
 moduleTraficLightWrite	KEYWORD2
+moduleTraficLightWriteRed KEYWORD2
+moduleTraficLightWriteYellow KEYWORD2
+moduleTraficLightWriteGreen KEYWORD2
 
 extendSmartLEDPrepare	KEYWORD2
 extendSmartLEDFill	KEYWORD2

@@ -1,3 +1,5 @@
+#define USE_DHT
+
 #include <MINIBOT.h> // MINIBOT kutuphanesi / MINIBOT library
 
 // MINIBOT nesnesi olusturuluyor / Create a MINIBOT object

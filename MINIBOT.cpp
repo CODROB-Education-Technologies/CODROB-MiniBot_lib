@@ -2,6 +2,9 @@
 
 MINIBOT::MINIBOT()
 {
+#if defined(USE_SERVER)
+  serverCODROBWebSocket = new AsyncWebSocket("/serverCODROBWebSocket");
+#endif
 }
 
 void MINIBOT::begin()
@@ -83,6 +86,8 @@ void MINIBOT::ledWrite(bool status)
  * angle: The target angle for the servo (0° to 180°).
  * acceleration: The delay (in milliseconds) between incremental movements.
  */
+#ifdef USE_SERVO // Eğer main.cpp içinde tanımlandıysa, burada aktif olur
+
 void MINIBOT::moduleServoGoAngle(int pin, int angle, int acceleration)
 {
   // Ensure acceleration is valid
@@ -114,11 +119,13 @@ void MINIBOT::moduleServoGoAngle(int pin, int angle, int acceleration)
   // Ensure the final angle is set correctly
   servoModule.write(angle);
 }
+#endif
 
 /*********************************** DHT Sensor Initialization ***********************************
  * Configures the DHT sensor.
  * This is automatically initialized when reading temperature or humidity.
  */
+#if defined(USE_DHT)
 void MINIBOT::initializeDht(int pin, uint8_t type)
 {
   if (!dhtSensor)
@@ -188,6 +195,7 @@ int MINIBOT::moduleDhtHumRead(int pin) // Read Humidity
 
   return static_cast<int>(hum);
 }
+#endif
 
 /*********************************** Magnetic Sensor ***********************************
  */
@@ -297,8 +305,73 @@ void MINIBOT::moduleTraficLightWrite(bool red, bool yellow, bool green)
   }
 }
 
+void MINIBOT::moduleTraficLightWriteRed(bool red)
+{
+#if defined(ESP8266)
+  const int RED_PIN = IO13;
+#else
+#error "Unsupported platform! Only ESP8266 are supported."
+#endif
+
+  // Configure pins
+  pinMode(RED_PIN, OUTPUT);
+
+  if (red)
+  {
+    digitalWrite(RED_PIN, HIGH);
+  }
+  else
+  {
+    digitalWrite(RED_PIN, LOW);
+  }
+}
+
+void MINIBOT::moduleTraficLightWriteYellow(bool yellow)
+{
+#if defined(ESP8266)
+  const int YELLOW_PIN = IO5;
+#else
+#error "Unsupported platform! Only ESP8266 are supported."
+#endif
+
+  // Configure pins
+  pinMode(YELLOW_PIN, OUTPUT);
+
+  if (yellow)
+  {
+    digitalWrite(YELLOW_PIN, HIGH);
+  }
+  else
+  {
+    digitalWrite(YELLOW_PIN, LOW);
+  }
+}
+
+void MINIBOT::moduleTraficLightWriteGreen(bool green)
+{
+#if defined(ESP8266)
+  const int GREEN_PIN = IO4;
+#else
+#error "Unsupported platform! Only ESP8266 are supported."
+#endif
+
+  // Configure pins
+
+  pinMode(GREEN_PIN, OUTPUT);
+
+  if (green)
+  {
+    digitalWrite(GREEN_PIN, HIGH);
+  }
+  else
+  {
+    digitalWrite(GREEN_PIN, LOW);
+  }
+}
+
 /*********************************** Smart LED Sensor ***********************************
  */
+#if defined(USE_NEOPIXEL)
 void MINIBOT::extendSmartLEDPrepare(int pin, int numLEDs)
 {
   // Create a new Adafruit_NeoPixel object dynamically
@@ -414,6 +487,7 @@ void MINIBOT::moduleSmartLEDColorWipeEffect(uint32_t color, int wait)
     }
   }
 }
+#endif
 
 /*********************************** Motion Sensor ***********************************
  */
@@ -425,6 +499,7 @@ bool MINIBOT::moduleMotionRead(int pin)
 
 /*********************************** IR Sensor ***********************************
  */
+#if defined(USE_IR)
 
 // Initialize the IR module / IR modülünü başlat
 void MINIBOT::initializeIR(int pin)
@@ -476,6 +551,7 @@ int MINIBOT::moduleIRReadDecimalx8(int pin)
   }
   return 0; // No signal received / Sinyal yoksa 0 döndür
 }
+#endif
 
 /*********************************** Relay Sensor ***********************************
  */
@@ -520,6 +596,8 @@ int MINIBOT::eepromReadInt(int address) // EEPROM'dan int türünde veri okumak 
 }
 
 /*********************************** WiFi ***********************************/
+#if defined(USE_WIFI)
+
 void MINIBOT::wifiStartAndConnect(const char *ssid, const char *pass)
 {
   Serial.printf("[WiFi]: Connection Starting!\r\n[WiFi]: SSID: %s\r\n[WiFi]: Pass: %s\r\n", ssid, pass);
@@ -564,8 +642,10 @@ String MINIBOT::wifiGetIPAddress()
 {
   return WiFi.localIP().toString();
 }
+#endif
 
 /*********************************** Server ***********************************/
+#if defined(USE_SERVER)
 void MINIBOT::serverStart(const char *mode, const char *ssid, const char *password)
 {
   if (strcmp(mode, "STA") == 0)
@@ -636,7 +716,7 @@ void MINIBOT::serverStart(const char *mode, const char *ssid, const char *passwo
   Serial.println("[Local Server]: Server Started! ✅");
 }
 
-void ROLEBOT::serverCreateLocalPage(const char *url, const char *WEBPageScript, const char *WEBPageCSS, const char *WEBPageHTML, size_t bufferSize)
+void MINIBOT::serverCreateLocalPage(const char *url, const char *WEBPageScript, const char *WEBPageCSS, const char *WEBPageHTML, size_t bufferSize)
 {
   // 📌 Sayfa içeriğini oluştur
   serverCODROB.on(("/" + String(url)).c_str(), HTTP_GET, [WEBPageScript, WEBPageCSS, WEBPageHTML, bufferSize](AsyncWebServerRequest *request)
@@ -676,9 +756,10 @@ void MINIBOT::serverContinue()
     serverHandleDNS();
   }
 }
+#endif
 
 /*********************************** Firebase Server Functions ***********************************/
-
+#if defined(USE_FIREBASE)
 // Initialize Firebase connection with SignUp Authentication
 void MINIBOT::fbServerSetandStartWithUser(const char *projectURL, const char *secretKey, const char *userMail, const char *mailPass)
 {
@@ -889,3 +970,4 @@ String MINIBOT::fbServerGetJSON(const char *dataPath)
   Serial.println("[ERROR]: Failed to retrieve JSON data.");
   return "{}";
 }
+#endif

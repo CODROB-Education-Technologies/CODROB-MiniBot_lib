@@ -1,3 +1,5 @@
+#define USE_FIREBASE
+
 #include <MINIBOT.h>
 
 MINIBOT minibot;
