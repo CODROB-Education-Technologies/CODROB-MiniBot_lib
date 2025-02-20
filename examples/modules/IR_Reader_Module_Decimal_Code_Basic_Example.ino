@@ -1,3 +1,11 @@
+/*
+ * 📌 IR Sensör özelliklerini kullanabilmek için, MINIBOT_Config.h dosyasında 'USE_IR' tanımının başındaki
+ * yorum satırlarını (//) kaldırın. Aksi takdirde, sensör işlevleri devre dışı kalacaktır.
+ *
+ * 📌 To enable IR Sensor  features, remove the comment (//) before the 'USE_IR' definition in
+ * MINIBOT_Config.h. Otherwise, sensor functions will be disabled.
+ */
+
 #include <MINIBOT.h> // MINIBOT kutuphanesi / MINIBOT library
 
 // MINIBOT nesnesi olusturuluyor / Create a MINIBOT object

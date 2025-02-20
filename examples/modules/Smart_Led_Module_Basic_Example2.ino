@@ -1,3 +1,11 @@
+/*
+ * 📌 Akıllı Led özelliklerini kullanabilmek için, MINIBOT_Config.h dosyasında 'USE_NEOPIXEL' tanımının başındaki
+ * yorum satırlarını (//) kaldırın. Aksi takdirde, sensör işlevleri devre dışı kalacaktır.
+ *
+ * 📌 To enable Smart Led features, remove the comment (//) before the 'USE_NEOPIXEL' definition in
+ * MINIBOT_Config.h. Otherwise, sensor functions will be disabled.
+ */
+
 #include <MINIBOT.h> // MINIBOT kütüphanesi / MINIBOT library
 
 // MINIBOT nesnesi oluşturuluyor / Create a MINIBOT object

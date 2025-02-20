@@ -1,3 +1,11 @@
+/*
+ * 📌 Server özelliklerini kullanabilmek için, MINIBOT_Config.h dosyasında 'USE_SERVER' tanımının başındaki
+ * yorum satırlarını (//) kaldırın. Aksi takdirde, web sunucu işlevleri devre dışı kalacaktır.
+ *
+ * 📌 To enable server features, remove the comment (//) before the 'USE_SERVER' definition in
+ * MINIBOT_Config.h. Otherwise, web server functions will be disabled.
+ */
+
 #include <MINIBOT.h> // 📌 MINIBOT Kütüphanesi / MINIBOT Library
 
 MINIBOT minibot; // 📌 MINIBOT Nesnesi / MINIBOT Object
