@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.5.5] - 2025-02-20
+## [1.5.6] - 2025-02-20
 ### Added
 - Trafik iışıkları için tekli modül eklendi. 
 - Arduino uyumluluğu için library.properties eklendi.
