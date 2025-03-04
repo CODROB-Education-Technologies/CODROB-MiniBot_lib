@@ -6,7 +6,7 @@
  * MINIBOT_Config.h. Otherwise, sensor functions will be disabled.
  */
 
- #include <MINIBOT.h> // MINIBOT kütüphanesi / MINIBOT library
+#include <MINIBOT.h> // MINIBOT kütüphanesi / MINIBOT library
 
 // MINIBOT nesnesi oluşturuluyor / Create a MINIBOT object
 MINIBOT minibot;

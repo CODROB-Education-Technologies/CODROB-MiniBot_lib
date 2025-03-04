@@ -1,8 +1,9 @@
 #ifndef MINIBOT_H
 #define MINIBOT_H
+#include <Arduino.h>
+#include <MINIBOT_Config.h>
 
 #if defined(ESP8266)
-#include <Arduino.h>
 #include <EEPROM.h>
 #include <MINIBOT_Config.h>
 

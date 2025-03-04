@@ -1,3 +1,4 @@
+#include <MINIBOT_Config.h>
 #include "MINIBOT.h"
 
 MINIBOT::MINIBOT()
